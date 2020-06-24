@@ -1,0 +1,18 @@
+import Vue from 'vue';
+import Router from 'vue-router';
+
+import Catalog from '@/views/Catalog.vue';
+
+Vue.use(Router);
+
+export default new Router({
+  mode: 'history',
+  routes: [
+    {
+      path: '/catalog/:category/:revision/:os/:arch?',
+      name: 'Catalog',
+      component: Catalog,
+      props: true,
+    },
+  ],
+});
