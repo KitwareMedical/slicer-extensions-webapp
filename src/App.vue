@@ -1,9 +1,16 @@
 <template>
   <v-app>
     <v-main>
-      <v-container fluid>
+      <keep-alive>
         <router-view />
-      </v-container>
+      </keep-alive>
     </v-main>
   </v-app>
 </template>
+
+<style>
+.overflow-scroll {
+  height: 100%;
+  overflow-y: auto;
+}
+</style>

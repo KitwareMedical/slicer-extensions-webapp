@@ -25,13 +25,17 @@ export interface Extension {
     app_revision: string;
     arch: Arch;
     baseName: string;
+    category: string;
     codebase: string;
     description: string;
+    homepage: string;
+    icon_url: string;
     os: OS;
     packagetype: string;
     repository_type: string;
     repository_url: string;
     revision: string;
+    screenshots: string;
   };
 }
 

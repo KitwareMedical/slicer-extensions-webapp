@@ -48,7 +48,9 @@
     "parserOptions": {
       "parser": "@typescript-eslint/parser"
     },
-    "rules": {}
+    "rules": {
+      "import/prefer-default-export": 0
+    }
   },
   "browserslist": [
     "> 1%",

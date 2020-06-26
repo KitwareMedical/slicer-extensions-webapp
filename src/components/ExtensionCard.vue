@@ -1,46 +1,96 @@
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
+import { Location } from 'vue-router';
+
+import { Extension } from '../lib/api/extension.service';
 
 export default Vue.extend({
   props: {
-    title: String,
-    creatorId: String,
-    description: String,
+    extension: {
+      type: Object as PropType<Extension>,
+      required: true,
+    },
+    defaultImageUrl: {
+      type: String as PropType<string>,
+      default: 'https://download.slicer.org/static/img/slicer-logo-500.png',
+    },
+    maxDescriptionLength: {
+      type: Number as PropType<number>,
+      default: 140,
+    },
+  },
+  computed: {
+    iconUrl(): string {
+      return this.extension.meta.icon_url || this.defaultImageUrl;
+    },
+    description(): string {
+      const { description } = this.extension.meta;
+      if (description.length > this.maxDescriptionLength) {
+        return description.slice(0, this.maxDescriptionLength).concat('...');
+      }
+      return this.extension.meta.description;
+    },
+    detailsRoute(): Location {
+      const { currentRoute } = this.$router;
+      return {
+        name: 'Extension Details',
+        params: {
+          name: this.extension.lowerName,
+          ...currentRoute.params,
+        },
+      };
+    },
   },
 });
 </script>
 
 <template>
-  <v-card outlined class="extension-container">
-    <img
-      width="100%"
-      style="object-fit: cover; height: 240px;"
-      src="https://download.slicer.org/static/img/slicer-logo-500.png"
-    >
+  <v-card flat class="extension-container d-flex flex-column">
+    <router-link :to="detailsRoute">
+      <img
+        width="100%"
+        class="thumbnail"
+        :src="iconUrl"
+      >
+    </router-link>
     <v-card-title
-      class="text-subtitle-1 font-weight-bold extension-title"
+      class="text-subtitle-1 font-weight-bold pt-2"
     >
-      <span>{{ title }}</span>
+      <router-link
+        class="success--text extension-title"
+        :to="detailsRoute"
+      >
+        {{ extension.title }}
+      </router-link>
     </v-card-title>
-    <v-card-subtitle> {{ creatorId }} </v-card-subtitle>
-    <v-card-text> {{ description }}</v-card-text>
+    <v-card-subtitle> {{ extension.meta.category }} </v-card-subtitle>
+    <v-card-text class="extension-description pb-0"> {{ description }} </v-card-text>
+    <v-spacer />
     <v-card-actions>
       <v-spacer />
       <v-btn text color="success">
+        <v-icon class="pr-1"> mdi-download </v-icon>
         Download
-        <v-icon class="pl-1"> mdi-download </v-icon>
       </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+$width: 240px;
+
 .extension-container {
-  width: 240px;
+  width: $width;
+  height: 475px;
 }
-.extension-title span {
+.extension-title {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+.thumbnail {
+  object-fit: cover;
+  border-radius: 32px;
+  height: $width;
 }
 </style>

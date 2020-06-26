@@ -1,5 +1,6 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { getCategories } from '@/lib/utils';
 import {
   OS, Arch, Extension, listExtensions, ListExtensionsParams,
 } from '@/lib/api/extension.service';
@@ -37,6 +38,7 @@ export default Vue.extend({
   data() {
     return {
       extensions: [] as Extension[],
+      categories: [] as [string, number][],
     };
   },
 
@@ -58,12 +60,19 @@ export default Vue.extend({
       }
       return '';
     },
+    filteredExtensions(): Extension[] {
+      if (this.category !== 'All') {
+        return this.extensions.filter((e) => e.meta.category === this.category);
+      }
+      return this.extensions;
+    },
   },
 
   methods: {
     async updateExtensions() {
       const { data } = await listExtensions(this.listParams);
       this.extensions = data;
+      this.categories = ([['All', -1]] as [string, number][]).concat(getCategories(data));
     },
   },
 
@@ -80,19 +89,37 @@ export default Vue.extend({
 </script>
 
 <template>
-<v-row>
-  <v-col class="flex-grow-0">
-    <category-list style="width: 250px;" />
-  </v-col>
-  <v-col>
-    <v-row>
-      <extension-card
-        v-for="extension in extensions"
-        :key="extension._id"
-        v-bind="extension"
-        class="ma-2"
+<v-container fluid class="catalog">
+  <v-row style="height: 100%">
+    <v-col
+      class="flex-grow-0"
+      style="height: 100%"
+    >
+      <category-list
+        class="category-list"
+        :categories="categories"
       />
-    </v-row>
-  </v-col>
-</v-row>
+    </v-col>
+    <v-col style="height: 100%">
+      <v-row class="overflow-scroll justify-begin">
+        <extension-card
+          v-for="extension in filteredExtensions"
+          :key="extension._id"
+          v-bind="{ extension }"
+          class="ma-3"
+        />
+      </v-row>
+    </v-col>
+  </v-row>
+</v-container>
 </template>
+
+<style scoped>
+.catalog {
+  height: 100vh;
+  overflow: hidden;
+}
+.category-list {
+  width: 250px;
+}
+</style>
