@@ -4,7 +4,7 @@
 
 | variable | description |
 |----------|-------------|
-| VUE_APP_SLICER_APP_ID | Girder slicer application ID |
+| VUE_APP_APP_ID | Girder extension store application ID |
 | VUE_APP_BASE_URL | Base URL of backend, including '/api/v1' |
 
 ## Project setup

@@ -8,7 +8,7 @@ import {
 import ExtensionCard from '@/components/ExtensionCard.vue';
 import CategoryList from '@/components/CategoryList.vue';
 
-const SlicerAppId = process.env.VUE_APP_SLICER_APP_ID as string;
+const AppId = process.env.VUE_APP_APP_ID as string;
 
 export default Vue.extend({
   props: {
@@ -45,7 +45,7 @@ export default Vue.extend({
   computed: {
     listParams(): ListExtensionsParams {
       return {
-        appId: SlicerAppId,
+        appId: AppId,
         revision: parseInt(this.revision, 10),
         os: this.os,
         arch: this.arch,

@@ -10,14 +10,13 @@ export enum Arch {
   amd64 = 'amd64',
 }
 
-export interface Extension {
+interface RestExtension {
   _id: string;
   created: string;
   creatorId: string;
   description: string;
   lowerName: string;
   name: string;
-  title: string;
   size: number;
   updated: string;
   meta: {
@@ -39,6 +38,10 @@ export interface Extension {
   };
 }
 
+export interface Extension extends RestExtension {
+  title: string;
+}
+
 export interface ListExtensionsParams {
   appId: string;
   revision: number;
@@ -46,10 +49,17 @@ export interface ListExtensionsParams {
   arch: Arch | undefined;
 }
 
+function addExtensionDetails(e: RestExtension): Extension {
+  return {
+    ...e,
+    title: e.name.split('_')[1],
+  };
+}
+
 function listExtensions({
   appId, revision, os, arch = undefined,
 }: ListExtensionsParams) {
-  return axios.get<Extension[]>(`app/${appId}/extension`, {
+  return axios.get<RestExtension[]>(`app/${appId}/extension`, {
     params: {
       // eslint-disable-next-line @typescript-eslint/camelcase
       app_revision: revision,
@@ -59,24 +69,31 @@ function listExtensions({
       sortdir: -1,
     },
   }).then(({ data }) => ({
-    data: data.map((extension) => ({
-      ...extension,
-      title: extension.name.split('_')[1],
-    })),
+    data: data.map((extension) => addExtensionDetails(extension)),
   }));
 }
 
-function getExtension({
-  appId, id,
-}: {
+export interface GetExtensionParams {
   appId: string;
-  id: string;
-}) {
-  return axios.get<Extension>(`app/${appId}/extension`, {
+  id?: string;
+  name?: string;
+}
+
+function getExtension({
+  appId, id, name,
+}: GetExtensionParams) {
+  return axios.get<RestExtension[]>(`app/${appId}/extension`, {
     params: {
       // eslint-disable-next-line @typescript-eslint/camelcase
       extension_id: id,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      extension_name: name,
     },
+  }).then(({ data }) => {
+    if (data.length) {
+      return addExtensionDetails(data[0]);
+    }
+    return null;
   });
 }
 

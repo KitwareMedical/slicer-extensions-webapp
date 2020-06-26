@@ -68,7 +68,7 @@ export default Vue.extend({
     <v-spacer />
     <v-card-actions>
       <v-spacer />
-      <v-btn text color="success">
+      <v-btn outlined block color="success">
         <v-icon class="pr-1"> mdi-download </v-icon>
         Download
       </v-btn>
