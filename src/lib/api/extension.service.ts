@@ -76,18 +76,23 @@ function listExtensions({
 export interface GetExtensionParams {
   appId: string;
   id?: string;
-  name?: string;
+  baseName?: string;
+  revision: number;
+  os: OS;
+  arch: Arch | undefined;
 }
 
 function getExtension({
-  appId, id, name,
+  appId, id, baseName, revision, os, arch,
 }: GetExtensionParams) {
   return axios.get<RestExtension[]>(`app/${appId}/extension`, {
     params: {
       // eslint-disable-next-line @typescript-eslint/camelcase
       extension_id: id,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      extension_name: name,
+      baseName,
+      os,
+      arch,
+      revision,
     },
   }).then(({ data }) => {
     if (data.length) {

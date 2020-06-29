@@ -35,7 +35,7 @@ export default Vue.extend({
       return {
         name: 'Extension Details',
         params: {
-          name: this.extension.lowerName,
+          baseName: this.extension.meta.baseName,
           ...currentRoute.params,
         },
       };

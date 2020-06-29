@@ -16,7 +16,7 @@ export default new Router({
       props: true,
     },
     {
-      path: '/view/:name',
+      path: '/view/:baseName/:revision/:os/:arch?',
       name: 'Extension Details',
       component: ExtensionDetails,
       props: true,

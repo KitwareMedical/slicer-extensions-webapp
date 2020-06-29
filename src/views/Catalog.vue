@@ -61,7 +61,7 @@ export default Vue.extend({
       return '';
     },
     filteredExtensions(): Extension[] {
-      if (this.category !== 'All') {
+      if (this.category.toLowerCase() !== 'all') {
         return this.extensions.filter((e) => e.meta.category === this.category);
       }
       return this.extensions;

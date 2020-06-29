@@ -1,16 +1,28 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import {
-  Extension, getExtension, GetExtensionParams,
+  Extension, getExtension, GetExtensionParams, OS, Arch,
 } from '@/lib/api/extension.service';
 
 const AppId = process.env.VUE_APP_APP_ID as string;
 
 export default Vue.extend({
   props: {
-    name: {
+    baseName: {
       type: String as PropType<string>,
       required: true,
+    },
+    revision: {
+      type: String as PropType<string>,
+      required: true,
+    },
+    os: {
+      type: String as PropType<OS>,
+      required: true,
+    },
+    arch: {
+      type: String as PropType<Arch|undefined>,
+      default: undefined,
     },
   },
 
@@ -24,7 +36,10 @@ export default Vue.extend({
     requestParams(): GetExtensionParams {
       return {
         appId: AppId,
-        name: this.name,
+        baseName: this.baseName,
+        revision: parseInt(this.revision, 10),
+        os: this.os,
+        arch: this.arch,
       };
     },
   },
