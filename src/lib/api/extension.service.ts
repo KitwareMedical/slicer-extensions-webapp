@@ -10,6 +10,13 @@ export enum Arch {
   amd64 = 'amd64',
 }
 
+export enum InstallState {
+  NotInstalled = 1,
+  Installed,
+  ScheduledForUninstall,
+  NotApplicable,
+}
+
 interface RestExtension {
   _id: string;
   created: string;
@@ -40,6 +47,7 @@ interface RestExtension {
 
 export interface Extension extends RestExtension {
   title: string;
+  installState: Promise<InstallState>;
 }
 
 export interface ListExtensionsParams {
@@ -49,10 +57,30 @@ export interface ListExtensionsParams {
   arch: Arch | undefined;
 }
 
+function getInstallState(e: RestExtension): Promise<InstallState> {
+  const manager = window.extensions_manager_model;
+  if (manager) {
+    return Promise.all([
+      new Promise<boolean>((r) => manager.isExtensionScheduledForUninstall(e.lowerName, r)),
+      new Promise<boolean>((r) => manager.isExtensionInstalled(e.lowerName, r)),
+    ]).then(([scheduled, installed]) => {
+      if (scheduled) {
+        return InstallState.ScheduledForUninstall;
+      }
+      if (installed) {
+        return InstallState.Installed;
+      }
+      return InstallState.NotInstalled;
+    });
+  }
+  return Promise.resolve(InstallState.NotApplicable);
+}
+
 function addExtensionDetails(e: RestExtension): Extension {
   return {
     ...e,
     title: e.name.split('_')[1],
+    installState: getInstallState(e),
   };
 }
 
