@@ -1,8 +1,9 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { Location } from 'vue-router';
+import { Extension } from '@/lib/api/extension.service';
 
-import { Extension } from '../lib/api/extension.service';
+import ActionButton from '@/components/ActionButton.vue';
 
 export default Vue.extend({
   props: {
@@ -19,6 +20,9 @@ export default Vue.extend({
       default: 140,
     },
   },
+
+  components: { ActionButton },
+
   computed: {
     iconUrl(): string {
       return this.extension.meta.icon_url || this.defaultImageUrl;
@@ -57,7 +61,7 @@ export default Vue.extend({
       class="text-subtitle-1 font-weight-bold pt-2"
     >
       <router-link
-        class="success--text extension-title"
+        class="black--text extension-title"
         :to="detailsRoute"
       >
         {{ extension.title }}
@@ -68,10 +72,7 @@ export default Vue.extend({
     <v-spacer />
     <v-card-actions>
       <v-spacer />
-      <v-btn outlined block color="success">
-        <v-icon class="pr-1"> mdi-download </v-icon>
-        Download
-      </v-btn>
+      <action-button outlined :extension="extension" />
     </v-card-actions>
   </v-card>
 </template>

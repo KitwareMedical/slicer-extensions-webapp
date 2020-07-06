@@ -57,20 +57,12 @@ export interface ListExtensionsParams {
   arch: Arch | undefined;
 }
 
-export interface InstallState {
-
-}
-
 function getInstallState(e: RestExtension): Promise<InstallState> {
   const manager = window.extensions_manager_model;
   if (manager) {
     return Promise.all([
-      new Promise((resolve) => (
-        manager.isExtensionScheduledForUninstall(e.name, resolve)
-      )),
-      new Promise((resolve) => (
-        manager.isExtensionInstalled(e.name, resolve)
-      )),
+      new Promise<boolean>((r) => manager.isExtensionScheduledForUninstall(e.lowerName, r)),
+      new Promise<boolean>((r) => manager.isExtensionInstalled(e.lowerName, r)),
     ]).then(([scheduled, installed]) => {
       if (scheduled) {
         return InstallState.ScheduledForUninstall;
