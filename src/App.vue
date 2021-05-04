@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-main>
+      <notifications position="top right"/>
       <keep-alive>
         <router-view />
       </keep-alive>
