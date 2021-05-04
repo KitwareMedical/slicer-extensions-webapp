@@ -2,7 +2,7 @@
 import Vue, { PropType } from 'vue';
 import { getCategories } from '@/lib/utils';
 import {
-  OS, Arch, Extension, listExtensions, ListExtensionsParams,
+  OS, Arch, Extension, listExtensions,
 } from '@/lib/api/extension.service';
 
 import ExtensionCard from '@/components/ExtensionCard.vue';
@@ -35,21 +35,43 @@ export default Vue.extend({
     ExtensionCard,
   },
 
+  /**
+   * Typescript doesn't support asyncComputed properly.
+   * This section replicates the type declarations of
+   * the actual values in asyncComputed.  Because it's a plugin
+   * asyncComputed's values will override these.
+   */
   data() {
     return {
       extensions: [] as Extension[],
-      categories: [] as [string, number][],
     };
   },
 
+  asyncComputed: {
+    extensions: {
+      async get(): Promise<Extension[]> {
+        const params = {
+          appId: AppId,
+          revision: parseInt(this.revision, 10),
+          os: this.os,
+          arch: this.arch,
+        };
+        const { data } = await listExtensions(params);
+        return data;
+      },
+      default: [] as Extension[],
+    },
+  },
+
   computed: {
-    listParams(): ListExtensionsParams {
-      return {
-        appId: AppId,
-        revision: parseInt(this.revision, 10),
-        os: this.os,
-        arch: this.arch,
-      };
+    categories(): [string, number][] {
+      return ([['All', -1]] as [string, number][]).concat(getCategories(this.extensions));
+    },
+    filteredExtensions(): Extension[] {
+      if (this.category.toLowerCase() !== 'all') {
+        return this.extensions.filter((e) => e.meta.category === this.category);
+      }
+      return this.extensions;
     },
     valid(): string {
       if (!(this.os in OS)) {
@@ -60,30 +82,6 @@ export default Vue.extend({
       }
       return '';
     },
-    filteredExtensions(): Extension[] {
-      if (this.category.toLowerCase() !== 'all') {
-        return this.extensions.filter((e) => e.meta.category === this.category);
-      }
-      return this.extensions;
-    },
-  },
-
-  methods: {
-    async updateExtensions() {
-      const { data } = await listExtensions(this.listParams);
-      this.extensions = data;
-      this.categories = ([['All', -1]] as [string, number][]).concat(getCategories(data));
-    },
-  },
-
-  watch: {
-    listParams() {
-      this.updateExtensions();
-    },
-  },
-
-  created() {
-    this.updateExtensions();
   },
 });
 </script>

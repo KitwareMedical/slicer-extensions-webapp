@@ -1,8 +1,9 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import {
-  Extension, getExtension, GetExtensionParams, OS, Arch,
+  Extension, getExtension, OS, Arch,
 } from '@/lib/api/extension.service';
+import ActionButton from '@/components/ActionButton.vue';
 
 const AppId = process.env.VUE_APP_APP_ID as string;
 
@@ -26,38 +27,22 @@ export default Vue.extend({
     },
   },
 
-  data() {
-    return {
-      extension: null as Extension | null,
-    };
-  },
+  components: { ActionButton },
 
-  computed: {
-    requestParams(): GetExtensionParams {
-      return {
-        appId: AppId,
-        baseName: this.baseName,
-        revision: parseInt(this.revision, 10),
-        os: this.os,
-        arch: this.arch,
-      };
+  asyncComputed: {
+    extension: {
+      async get(): Promise<Extension | null> {
+        const params = {
+          appId: AppId,
+          baseName: this.baseName,
+          revision: parseInt(this.revision, 10),
+          os: this.os,
+          arch: this.arch,
+        };
+        return getExtension(params);
+      },
+      default: null,
     },
-  },
-
-  methods: {
-    async updateExtension() {
-      this.extension = await getExtension(this.requestParams);
-    },
-  },
-
-  watch: {
-    requestParams() {
-      this.updateExtension();
-    },
-  },
-
-  created() {
-    this.updateExtension();
   },
 });
 </script>
@@ -70,15 +55,10 @@ export default Vue.extend({
         :src="extension.meta.icon_url"
         width="100%"
       >
-      <v-btn
-        depressed
-        block
-        color="success"
+      <action-button
+        :extension="extension"
         class="my-3"
-      >
-        <v-icon class="pr-1"> mdi-download </v-icon>
-        Download
-      </v-btn>
+      />
     </v-col>
     <v-divider vertical class="mx-5"/>
     <v-col cols="8">
@@ -91,7 +71,7 @@ export default Vue.extend({
       <v-btn
         outlined
         class="my-3 mr-3"
-        :to="extension.meta.homepage"
+        :href="extension.meta.homepage"
       >
         <v-icon class="pr-1"> mdi-home </v-icon>
         View Homepage
@@ -99,7 +79,7 @@ export default Vue.extend({
       <v-btn
         outlined
         class="my-3 mr-3"
-        :to="extension.meta.repository_url"
+        :href="extension.meta.repository_url"
       >
         <v-icon class="pr-1"> mdi-code-tags </v-icon>
         View Source Code
