@@ -18,11 +18,13 @@ new Vue({
 
 declare global {
   interface Window {
-    createNotice(message: string, duration: number, type: string): void;
+    app: {
+      createNotice(message: string, duration: number, type: string): void;
+    };
   }
 }
 
-window.createNotice = (message, duration, state = 'success') => {
+window.app.createNotice = (message, duration, state = 'success') => {
   let type = state;
   if (state === 'warning') {
     type = 'warn';
