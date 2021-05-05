@@ -33,14 +33,14 @@ export default Vue.extend({
       if (manager) {
         switch (state) {
           case InstallState.Installed:
-            manager.scheduleExtensionForUninstall(this.extension.lowerName);
+            manager.scheduleExtensionForUninstall(this.extension.title);
             break;
           case InstallState.NotInstalled:
             // eslint-disable-next-line no-underscore-dangle
             manager.downloadAndInstallExtension(this.extension._id);
             break;
           case InstallState.ScheduledForUninstall:
-            manager.cancelExtensionScheduledForUninstall(this.extension.lowerName);
+            manager.cancelExtensionScheduledForUninstall(this.extension.title);
             break;
           default:
             throw new Error(`Unexpected state encountered: ${state}`);
