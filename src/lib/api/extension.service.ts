@@ -61,8 +61,8 @@ function getInstallState(e: RestExtension): Promise<InstallState> {
   const manager = window.extensions_manager_model;
   if (manager) {
     return Promise.all([
-      new Promise<boolean>((r) => manager.isExtensionScheduledForUninstall(e.lowerName, r)),
-      new Promise<boolean>((r) => manager.isExtensionInstalled(e.lowerName, r)),
+      new Promise<boolean>((r) => manager.isExtensionScheduledForUninstall(e.meta.baseName, r)),
+      new Promise<boolean>((r) => manager.isExtensionInstalled(e.meta.baseName, r)),
     ]).then(([scheduled, installed]) => {
       if (scheduled) {
         return InstallState.ScheduledForUninstall;
@@ -79,7 +79,7 @@ function getInstallState(e: RestExtension): Promise<InstallState> {
 function addExtensionDetails(e: RestExtension): Extension {
   return {
     ...e,
-    title: e.name.split('_')[1],
+    title: e.meta.baseName,
     installState: getInstallState(e),
   };
 }
