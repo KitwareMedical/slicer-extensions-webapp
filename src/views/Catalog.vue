@@ -65,7 +65,7 @@ export default Vue.extend({
 
   computed: {
     categories(): [string, number][] {
-      return ([['All', -1]] as [string, number][]).concat(getCategories(this.extensions));
+      return ([['All', this.extensions.length]] as [string, number][]).concat(getCategories(this.extensions));
     },
     filteredExtensions(): Extension[] {
       if (this.category.toLowerCase() !== 'all') {
