@@ -6,7 +6,7 @@ function getCategories(extensions: Extension[]): Array<[string, number]> {
     const existing = categories.get(e.meta.category);
     categories.set(e.meta.category, existing ? existing + 1 : 1);
   });
-  return Array.from(categories.entries());
+  return Array.from(categories.entries()).sort();
 }
 
 export {
