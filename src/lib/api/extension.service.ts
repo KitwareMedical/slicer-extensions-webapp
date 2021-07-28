@@ -93,8 +93,8 @@ function listExtensions({
       app_revision: revision,
       os,
       arch,
-      sort: 'created',
-      sortdir: -1,
+      sort: 'meta.baseName',
+      sortdir: 1,
     },
   }).then(({ data }) => ({
     data: data.map((extension) => addExtensionDetails(extension)),
