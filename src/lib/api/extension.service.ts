@@ -2,7 +2,8 @@ import axios from './base';
 
 export enum OS {
   macosx = 'macosx',
-  linux = 'linux,'
+  linux = 'linux',
+  windows = 'win',
 }
 
 export enum Arch {
@@ -55,6 +56,11 @@ export interface ListExtensionsParams {
   revision: number;
   os: OS;
   arch: Arch | undefined;
+  query: string | (string | null)[] | null;
+}
+
+function hasExtensionManagerModel(): boolean {
+  return window.extensions_manager_model !== undefined;
 }
 
 function getInstallState(e: RestExtension): Promise<InstallState> {
@@ -85,7 +91,7 @@ function addExtensionDetails(e: RestExtension): Extension {
 }
 
 function listExtensions({
-  appId, revision, os, arch = undefined,
+  appId, revision, os, arch = undefined, query = null,
 }: ListExtensionsParams) {
   return axios.get<RestExtension[]>(`app/${appId}/extension`, {
     params: {
@@ -93,6 +99,8 @@ function listExtensions({
       app_revision: revision,
       os,
       arch,
+      q: query,
+      limit: 0,
       sort: 'meta.baseName',
       sortdir: 1,
     },
@@ -132,5 +140,6 @@ function getExtension({
 
 export {
   getExtension,
+  hasExtensionManagerModel,
   listExtensions,
 };

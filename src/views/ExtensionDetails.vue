@@ -3,6 +3,8 @@ import Vue, { PropType } from 'vue';
 import {
   Extension, getExtension, OS, Arch,
 } from '@/lib/api/extension.service';
+
+import AppBar from '@/components/AppBar.vue';
 import ActionButton from '@/components/ActionButton.vue';
 
 const AppId = process.env.VUE_APP_APP_ID as string;
@@ -27,7 +29,10 @@ export default Vue.extend({
     },
   },
 
-  components: { ActionButton },
+  components: {
+    ActionButton,
+    AppBar,
+  },
 
   asyncComputed: {
     extension: {
@@ -49,6 +54,9 @@ export default Vue.extend({
 
 <template>
 <v-container>
+  <app-bar
+    class="app-bar"
+  />
   <v-row v-if="extension">
     <v-col cols="3">
       <img

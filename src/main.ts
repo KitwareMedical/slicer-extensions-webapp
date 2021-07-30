@@ -10,28 +10,29 @@ Vue.config.productionTip = false;
 Vue.use(AsyncComputed);
 Vue.use(Notifications);
 
-new Vue({
+const app = new Vue({
   vuetify,
   router,
   render: (h) => h(App),
+  methods: {
+    createNotice(message: string, duration: number, state: string) {
+      let type = state;
+      if (state === 'warning') {
+        type = 'warn';
+      }
+      Vue.notify({
+        type,
+        text: message,
+        duration,
+      });
+    },
+  },
 }).$mount('#app');
 
 declare global {
   interface Window {
-    app: {
-      createNotice(message: string, duration: number, type: string): void;
-    };
+    app: Vue;
   }
 }
 
-window.app.createNotice = (message, duration, state = 'success') => {
-  let type = state;
-  if (state === 'warning') {
-    type = 'warn';
-  }
-  Vue.notify({
-    type,
-    text: message,
-    duration,
-  });
-};
+window.app = app;

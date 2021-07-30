@@ -2,9 +2,10 @@
 import Vue, { PropType } from 'vue';
 import { getCategories } from '@/lib/utils';
 import {
-  OS, Arch, Extension, listExtensions,
+  OS, Arch, Extension, hasExtensionManagerModel, listExtensions,
 } from '@/lib/api/extension.service';
 
+import AppBar from '@/components/AppBar.vue';
 import ExtensionCard from '@/components/ExtensionCard.vue';
 import CategoryList from '@/components/CategoryList.vue';
 
@@ -31,6 +32,7 @@ export default Vue.extend({
   },
 
   components: {
+    AppBar,
     CategoryList,
     ExtensionCard,
   },
@@ -44,6 +46,7 @@ export default Vue.extend({
   data() {
     return {
       extensions: [] as Extension[],
+      query: this.$route.query.q,
     };
   },
 
@@ -55,8 +58,10 @@ export default Vue.extend({
           revision: parseInt(this.revision, 10),
           os: this.os,
           arch: this.arch,
+          query: this.query,
         };
         const { data } = await listExtensions(params);
+        this.$router.push({ name: 'Catalog', query: { q: this.query } });
         return data;
       },
       default: [] as Extension[],
@@ -73,6 +78,9 @@ export default Vue.extend({
       }
       return this.extensions;
     },
+    hasExtensionManagerModel(): boolean {
+      return hasExtensionManagerModel();
+    },
     valid(): string {
       if (!(this.os in OS)) {
         return `Invalid OS.  Choose one of ${Object.keys(OS)}`;
@@ -82,12 +90,28 @@ export default Vue.extend({
       }
       return '';
     },
+    selectedOs: {
+      get(): string {
+        return this.$route.params.os;
+      },
+      set(os: string): void {
+        this.$router.push({ name: 'Catalog', params: { os } });
+      },
+    },
   },
 });
 </script>
 
 <template>
 <v-container fluid class="catalog">
+  <app-bar
+    show-query-field
+    class="app-bar"
+    :default-os="os"
+    :default-query="query"
+    :query.sync="query"
+    :os.sync="selectedOs"
+  />
   <v-row style="height: 100%">
     <v-col
       class="flex-grow-0"
