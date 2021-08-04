@@ -49,6 +49,17 @@ export default Vue.extend({
       default: null,
     },
   },
+
+  computed: {
+    selectedOs: {
+      get(): string {
+        return this.$route.params.os;
+      },
+      set(os: string): void {
+        this.$router.push({ name: 'Extension Details', params: { os } });
+      },
+    },
+  },
 });
 </script>
 
@@ -56,6 +67,8 @@ export default Vue.extend({
 <v-container>
   <app-bar
     class="app-bar"
+    :default-os="os"
+    :os.sync="selectedOs"
   />
   <v-row v-if="extension">
     <v-col cols="3">
