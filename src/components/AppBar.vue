@@ -66,10 +66,24 @@ export default Vue.extend({
     app
     >
     <v-app-bar-title>Slicer Extensions Manager</v-app-bar-title>
+    <v-text-field
+      v-if="showQueryField"
+      v-model="query"
+      @keyup="$emit('update:query', query);"
+      class="shrink mx-4"
+      hide-details
+      light
+      placeholder="Type text..."
+      prepend-inner-icon="mdi-magnify"
+      single-line
+      solo
+      text="yes"
+      />
     <v-spacer></v-spacer>
     <v-select
       v-model="os"
       @change="$emit('update:os', os);"
+      class="shrink mx-4"
       hide-details
       solo
       :items="operatingSystems"
@@ -83,16 +97,5 @@ export default Vue.extend({
         <v-list-item-title>{{ data.item.text }}</v-list-item-title>
       </template>
     </v-select>
-    <v-text-field
-      v-if="showQueryField"
-      v-model="query"
-      @keyup="$emit('update:query', query);"
-      hide-details
-      light
-      placeholder="Type text..."
-      single-line
-      solo
-      text="yes"
-      />
   </v-app-bar>
 </template>
