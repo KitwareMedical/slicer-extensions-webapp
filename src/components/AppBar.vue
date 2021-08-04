@@ -1,5 +1,4 @@
 <script lang="ts">
-import '@mdi/font/css/materialdesignicons.css'; // Ensure you are using css-loader
 import Vue, { PropType } from 'vue';
 import {
   OS, hasExtensionManagerModel,
