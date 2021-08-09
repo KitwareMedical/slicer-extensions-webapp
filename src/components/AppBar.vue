@@ -56,6 +56,20 @@ export default Vue.extend({
       ];
     },
   },
+
+  watch: {
+    query(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.$emit('update:query', newVal);
+      }
+    },
+    os(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.$emit('update:os', newVal);
+      }
+    },
+  },
+
 });
 </script>
 
