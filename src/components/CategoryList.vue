@@ -8,6 +8,16 @@ export default Vue.extend({
       required: true,
     },
   },
+
+  methods: {
+    goTo(category: string) {
+      this.$router.push({ name: 'Catalog', params: { category }, query: { q: this.$route.query.q } }).catch((error) => {
+        if (error.name !== 'NavigationDuplicated') {
+          throw error;
+        }
+      });
+    },
+  },
 });
 </script>
 <template>
@@ -21,7 +31,7 @@ export default Vue.extend({
         v-for="category in categories"
         :key="category[0]"
         :value="category[0]"
-        :to="{ name: 'Catalog', params: { category: category[0] } }"
+        @click="goTo(category[0])"
       >
         <v-list-item-title> {{ category[0] }}
           <template v-if="category[1] >= 0">
