@@ -99,12 +99,24 @@ export default Vue.extend({
       },
     },
   },
+
+  watch: {
+    query(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        /* See https://github.com/vuejs/vetur/issues/1754#issuecomment-595256501 */
+        /* eslint-disable @typescript-eslint/no-explicit-any */
+        const appbar = this.$refs.appbar as any;
+        appbar.query = newVal;
+      }
+    },
+  },
 });
 </script>
 
 <template>
 <v-container fluid class="catalog">
   <app-bar
+    ref="appbar"
     show-query-field
     class="app-bar"
     :default-os="os"
