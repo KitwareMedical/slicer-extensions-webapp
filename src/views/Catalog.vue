@@ -61,7 +61,11 @@ export default Vue.extend({
           query: this.query,
         };
         const { data } = await listExtensions(params);
-        this.$router.push({ name: 'Catalog', query: { q: this.query } });
+        this.$router.push({ name: 'Catalog', query: { q: this.query } }).catch((error) => {
+          if (error.name !== 'NavigationDuplicated') {
+            throw error;
+          }
+        });
         return data;
       },
       default: [] as Extension[],
@@ -95,7 +99,11 @@ export default Vue.extend({
         return this.$route.params.os;
       },
       set(os: string): void {
-        this.$router.push({ name: 'Catalog', params: { os } });
+        this.$router.push({ name: 'Catalog', params: { os } }).catch((error) => {
+          if (error.name !== 'NavigationDuplicated') {
+            throw error;
+          }
+        });
       },
     },
   },
