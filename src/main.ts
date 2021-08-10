@@ -26,6 +26,12 @@ const app = new Vue({
         duration,
       });
     },
+    search(q: string) {
+      /* See https://github.com/vuejs/vetur/issues/1754#issuecomment-595256501 */
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      const view = this.$root.$children[0].$refs.view as any;
+      view.query = q;
+    },
   },
 }).$mount('#app');
 
