@@ -32,6 +32,10 @@ const app = new Vue({
       const view = this.$root.$children[0].$refs.view as any;
       view.query = q;
     },
+    setExtensionButtonState(extensionName: string, installState: string) {
+      const view = this.$root.$children[0].$refs.view as any;
+      view.setExtensionButtonState(extensionName, installState);
+    },
   },
 }).$mount('#app');
 

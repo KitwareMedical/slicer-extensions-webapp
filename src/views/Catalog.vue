@@ -2,7 +2,7 @@
 import Vue, { PropType } from 'vue';
 import { getCategories } from '@/lib/utils';
 import {
-  OS, Arch, Extension, hasExtensionManagerModel, listExtensions,
+  OS, Arch, Extension, InstallState, hasExtensionManagerModel, listExtensions,
 } from '@/lib/api/extension.service';
 
 import AppBar from '@/components/AppBar.vue';
@@ -105,6 +105,12 @@ export default Vue.extend({
           }
         });
       },
+    },
+  },
+
+  methods: {
+    setExtensionButtonState(extensionName: string, installState: keyof typeof InstallState) {
+      console.log(`Catalog: setExtensionButtonState: ${extensionName} InstallState[${InstallState[installState]}]`);
     },
   },
 
