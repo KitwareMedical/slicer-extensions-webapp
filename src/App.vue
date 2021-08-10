@@ -19,7 +19,7 @@ export default Vue.extend({
     <v-main>
       <notifications position="top right"/>
       <keep-alive>
-        <router-view />
+        <router-view ref="view"/>
       </keep-alive>
     </v-main>
     <v-footer app v-if="!hasExtensionManagerModel">
