@@ -32,6 +32,10 @@ export default Vue.extend({
     };
   },
 
+  activated() {
+    this.os = this.defaultOs;
+  },
+
   computed: {
     hasExtensionManagerModel(): boolean {
       return hasExtensionManagerModel();
@@ -56,20 +60,6 @@ export default Vue.extend({
       ];
     },
   },
-
-  watch: {
-    query(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.$emit('update:query', newVal);
-      }
-    },
-    os(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.$emit('update:os', newVal);
-      }
-    },
-  },
-
 });
 </script>
 
@@ -82,7 +72,7 @@ export default Vue.extend({
     <v-text-field
       v-if="showQueryField"
       v-model="query"
-      @keyup="$emit('update:query', query);"
+      @input="$emit('update:query', $event);"
       class="shrink mx-4"
       hide-details
       light
@@ -95,12 +85,12 @@ export default Vue.extend({
     <v-spacer></v-spacer>
     <v-select
       v-model="os"
-      @change="$emit('update:os', os);"
+      @change="$emit('update:os', $event);"
       class="shrink mx-4"
       hide-details
       solo
       :items="operatingSystems"
-      >
+    >
       <template v-slot:selection="data">
         <v-list-item-icon><v-icon>{{ data.item.icon }}</v-icon></v-list-item-icon>
         <v-list-item-title>{{ data.item.text }}</v-list-item-title>

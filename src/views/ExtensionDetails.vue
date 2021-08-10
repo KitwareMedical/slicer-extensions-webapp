@@ -1,15 +1,18 @@
 <script lang="ts">
-import Vue, { PropType } from 'vue';
 import {
-  Extension, InstallState, getExtension, OS, Arch,
+  computed, defineComponent, PropType, ref, toRefs, watch,
+} from '@vue/composition-api';
+import {
+  Extension, getExtension, OS, Arch, InstallState,
 } from '@/lib/api/extension.service';
+import Bus from '@/plugins/bus';
 
 import AppBar from '@/components/AppBar.vue';
 import ActionButton from '@/components/ActionButton.vue';
 
 const AppId = process.env.VUE_APP_APP_ID as string;
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     baseName: {
       type: String as PropType<string>,
@@ -34,39 +37,47 @@ export default Vue.extend({
     AppBar,
   },
 
-  asyncComputed: {
-    extension: {
-      async get(): Promise<Extension | null> {
-        const params = {
-          appId: AppId,
-          baseName: this.baseName,
-          revision: parseInt(this.revision, 10),
-          os: this.os,
-          arch: this.arch,
-        };
-        return getExtension(params);
-      },
-      default: null,
-    },
-  },
+  setup(props, { root }) {
+    const propsRefs = toRefs(props);
+    const extension = ref(null as Extension | null);
 
-  computed: {
-    selectedOs: {
+    async function loadExtension() {
+      extension.value = await getExtension({
+        appId: AppId,
+        baseName: props.baseName,
+        revision: parseInt(props.revision, 10),
+        os: props.os,
+        arch: props.arch,
+      });
+    }
+
+    loadExtension();
+
+    Bus.$on('extension-state-updated', (extensionName: string, state: InstallState) => {
+      if (extensionName === extension.value?.title) {
+        extension.value.installState = Promise.resolve(state);
+      }
+    });
+
+    watch([propsRefs.baseName, propsRefs.revision, propsRefs.os, propsRefs.arch], loadExtension);
+
+    const selectedOs = computed({
       get(): string {
-        return this.$route.params.os;
+        return root.$route.params.os;
       },
       set(os: string): void {
-        this.$router.push({ name: 'Extension Details', params: { os } });
+        root.$router.replace({ params: { os } }).catch((error) => {
+          if (error.name !== 'NavigationDuplicated') {
+            throw error;
+          }
+        });
       },
-    },
-  },
+    });
 
-  methods: {
-    setExtensionButtonState(extensionName: string, installState: keyof typeof InstallState) {
-      console.log(`ExtensionDetails: setExtensionButtonState: ${extensionName} ${InstallState[installState]}`);
-      const actionbutton = this.$refs[`extension-action-button-${extensionName}`] as any;
-      actionbutton.setInstallState(installState);
-    },
+    return {
+      extension,
+      selectedOs,
+    };
   },
 });
 </script>
@@ -76,7 +87,7 @@ export default Vue.extend({
   <app-bar
     class="app-bar"
     :default-os="os"
-    :os.sync="selectedOs"
+    @update:os="selectedOs = $event"
   />
   <v-row v-if="extension">
     <v-col cols="3">
