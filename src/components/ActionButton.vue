@@ -49,6 +49,10 @@ export default Vue.extend({
         // TODO: download the extension
       }
     },
+    setInstallState(installState: InstallState) {
+      console.log(`ActionButton - setInstallState [${installState}]`);
+      this.extension.installState = Promise.resolve(installState);
+    },
   },
 
   asyncComputed: {

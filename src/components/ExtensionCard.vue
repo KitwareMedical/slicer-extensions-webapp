@@ -72,7 +72,10 @@ export default Vue.extend({
     <v-spacer />
     <v-card-actions>
       <v-spacer />
-      <action-button outlined :extension="extension" />
+      <action-button outlined
+        :extension="extension"
+        :ref="'extension-action-button-' + extension.meta.baseName"
+      />
     </v-card-actions>
   </v-card>
 </template>

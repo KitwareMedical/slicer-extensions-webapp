@@ -1,7 +1,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import {
-  Extension, getExtension, OS, Arch,
+  Extension, InstallState, getExtension, OS, Arch,
 } from '@/lib/api/extension.service';
 
 import AppBar from '@/components/AppBar.vue';
@@ -58,6 +58,14 @@ export default Vue.extend({
       set(os: string): void {
         this.$router.push({ name: 'Extension Details', params: { os } });
       },
+    },
+  },
+
+  methods: {
+    setExtensionButtonState(extensionName: string, installState: keyof typeof InstallState) {
+      console.log(`ExtensionDetails: setExtensionButtonState: ${extensionName} ${InstallState[installState]}`);
+      const actionbutton = this.$refs[`extension-action-button-${extensionName}`] as any;
+      actionbutton.setInstallState(installState);
     },
   },
 });
