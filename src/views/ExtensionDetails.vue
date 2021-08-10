@@ -1,9 +1,9 @@
 <script lang="ts">
 import {
-  computed, defineComponent, PropType, ref, toRefs, watch,
+  computed, defineComponent, PropType, shallowRef, toRefs, watch,
 } from '@vue/composition-api';
 import {
-  Extension, getExtension, OS, Arch, InstallState,
+  Extension, getExtension, OS, Arch,
 } from '@/lib/api/extension.service';
 import Bus from '@/plugins/bus';
 
@@ -39,7 +39,7 @@ export default defineComponent({
 
   setup(props, { root }) {
     const propsRefs = toRefs(props);
-    const extension = ref(null as Extension | null);
+    const extension = shallowRef(null as Extension | null);
 
     async function loadExtension() {
       extension.value = await getExtension({
@@ -53,9 +53,9 @@ export default defineComponent({
 
     loadExtension();
 
-    Bus.$on('extension-state-updated', (extensionName: string, state: InstallState) => {
+    Bus.$on('extension-state-updated', (extensionName: string) => {
       if (extensionName === extension.value?.title) {
-        extension.value.installState = Promise.resolve(state);
+        loadExtension();
       }
     });
 

@@ -1,10 +1,10 @@
 <script lang="ts">
 import {
-  computed, PropType, ref, defineComponent, Ref, watch, toRefs,
+  computed, PropType, defineComponent, Ref, watch, toRefs, shallowRef,
 } from '@vue/composition-api';
 import { getCategories } from '@/lib/utils';
 import {
-  OS, Arch, Extension, hasExtensionManagerModel, listExtensions, InstallState,
+  OS, Arch, Extension, hasExtensionManagerModel, listExtensions,
 } from '@/lib/api/extension.service';
 
 import Bus from '@/plugins/bus';
@@ -67,7 +67,7 @@ export default defineComponent({
       },
     });
     const propsRefs = toRefs(props);
-    const extensions = ref([]) as Ref<Extension[]>;
+    const extensions = shallowRef([]) as Ref<Extension[]>;
 
     async function loadExtensions() {
       const params = {
@@ -83,14 +83,7 @@ export default defineComponent({
 
     loadExtensions();
 
-    Bus.$on('extension-state-updated', (extensionName: string, state: InstallState) => {
-      extensions.value.forEach((extension) => {
-        if (extensionName === extension.title) {
-          // eslint-disable-next-line no-param-reassign
-          extension.installState = Promise.resolve(state);
-        }
-      });
-    });
+    Bus.$on('extension-state-updated', () => loadExtensions());
 
     watch([propsRefs.revision, propsRefs.os, propsRefs.arch, query], loadExtensions);
 
