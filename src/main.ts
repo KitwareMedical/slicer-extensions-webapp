@@ -39,10 +39,4 @@ const app = new Vue({
   },
 }).$mount('#app');
 
-declare global {
-  interface Window {
-    app: Vue;
-  }
-}
-
 window.app = app;
