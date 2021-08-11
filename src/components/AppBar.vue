@@ -100,7 +100,7 @@ export default Vue.extend({
       hide-details
       solo
       :items="operatingSystems"
-      >
+    >
       <template v-slot:selection="data">
         <v-list-item-icon><v-icon>{{ data.item.icon }}</v-icon></v-list-item-icon>
         <v-list-item-title>{{ data.item.text }}</v-list-item-title>

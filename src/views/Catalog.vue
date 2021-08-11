@@ -128,38 +128,41 @@ export default Vue.extend({
 </script>
 
 <template>
-<v-container fluid class="catalog">
-  <app-bar
-    ref="appbar"
-    show-query-field
-    class="app-bar"
-    :default-os="os"
-    :default-query="query"
-    :query.sync="query"
-    :os.sync="selectedOs"
-  />
-  <v-row style="height: 100%">
-    <v-col
-      class="flex-grow-0"
-      style="height: 100%"
-    >
-      <category-list
-        class="category-list"
-        :categories="categories"
-      />
-    </v-col>
-    <v-col style="height: 100%">
-      <v-row class="overflow-scroll justify-begin">
-        <extension-card
-          v-for="extension in filteredExtensions"
-          :key="extension._id"
-          v-bind="{ extension }"
-          class="ma-3"
+  <v-container
+    fluid
+    class="catalog"
+  >
+    <app-bar
+      ref="appbar"
+      show-query-field
+      class="app-bar"
+      :default-os="os"
+      :default-query="query"
+      :query.sync="query"
+      :os.sync="selectedOs"
+    />
+    <v-row style="height: 100%">
+      <v-col
+        class="flex-grow-0"
+        style="height: 100%"
+      >
+        <category-list
+          class="category-list"
+          :categories="categories"
         />
-      </v-row>
-    </v-col>
-  </v-row>
-</v-container>
+      </v-col>
+      <v-col style="height: 100%">
+        <v-row class="overflow-scroll justify-begin">
+          <extension-card
+            v-for="extension in filteredExtensions"
+            :key="extension._id"
+            v-bind="{ extension }"
+            class="ma-3"
+          />
+        </v-row>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <style scoped>
