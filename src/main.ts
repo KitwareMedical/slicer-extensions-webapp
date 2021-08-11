@@ -1,14 +1,18 @@
 import Vue from 'vue';
 import AsyncComputed from 'vue-async-computed';
 import Notifications from 'vue-notification';
+import CompositionApi from '@vue/composition-api';
 
 import App from './App.vue';
 import vuetify from './plugins/vuetify';
+import bus from './plugins/bus';
 import router from './router';
+import { InstallState } from './lib/api/extension.service';
 
 Vue.config.productionTip = false;
 Vue.use(AsyncComputed);
 Vue.use(Notifications);
+Vue.use(CompositionApi);
 
 const app = new Vue({
   vuetify,
@@ -32,9 +36,8 @@ const app = new Vue({
       const view = this.$root.$children[0].$refs.view as any;
       view.query = q;
     },
-    setExtensionButtonState(extensionName: string, installState: string) {
-      const view = this.$root.$children[0].$refs.view as any;
-      view.setExtensionButtonState(extensionName, installState);
+    setExtensionButtonState(extensionName: string, installState: keyof typeof InstallState) {
+      bus.$emit('extension-state-updated', extensionName, InstallState[installState]);
     },
   },
 }).$mount('#app');
