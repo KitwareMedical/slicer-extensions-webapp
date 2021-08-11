@@ -104,6 +104,7 @@ export default defineComponent({
     <v-col cols="8">
       <div class="text-h3 mb-3"> {{ extension.title }} </div>
       <div class="text-h6 mb-2"> {{ extension.meta.category }} </div>
+      <div class="text-subtitle-1 mb-2"> {{ extension.meta.contributors }} </div>
       <div class="text-subtitle-1 mb-2">
         Created on {{ new Date(extension.created).toDateString() }}
       </div>
