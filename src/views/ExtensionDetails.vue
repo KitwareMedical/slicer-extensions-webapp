@@ -106,7 +106,7 @@ export default defineComponent({
       <div class="text-h6 mb-2"> {{ extension.meta.category }} </div>
       <div class="text-subtitle-1 mb-2"> {{ extension.meta.contributors }} </div>
       <div class="text-subtitle-1 mb-2">
-        Created on {{ new Date(extension.created).toDateString() }}
+        Published on {{ new Date(extension.created).toDateString() }}
       </div>
       <div class="text-subtitle-1"> {{ extension.meta.description }} </div>
       <v-btn
