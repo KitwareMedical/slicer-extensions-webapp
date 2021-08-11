@@ -74,8 +74,11 @@ export default defineComponent({
       },
     });
 
+    const screenshotsAsList = () => extension.value?.meta.screenshots.split(' ');
+
     return {
       extension,
+      screenshotsAsList,
       selectedOs,
     };
   },
@@ -125,6 +128,20 @@ export default defineComponent({
         <v-icon class="pr-1"> mdi-code-tags </v-icon>
         View Source Code
       </v-btn>
+
+      <div v-if="screenshotsAsList()">
+        <div class="text-h6 mb-4"> Screenshots </div>
+        <v-carousel>
+          <v-carousel-item
+            v-for="(url,i) in screenshotsAsList()"
+            :key="i"
+            :src="url"
+            reverse-transition="fade-transition"
+            transition="fade-transition"
+          ></v-carousel-item>
+        </v-carousel>
+      </div>
+
     </v-col>
   </v-row>
 </v-container>
