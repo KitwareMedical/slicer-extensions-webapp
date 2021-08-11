@@ -10,4 +10,7 @@ declare global {
       [elem: string]: any;
     }
   }
+  interface Window {
+    app: Vue;
+  }
 }
