@@ -82,7 +82,7 @@ export default Vue.extend({
     <v-text-field
       v-if="showQueryField"
       v-model="query"
-      @keyup="$emit('update:query', query);"
+      @input="$emit('update:query', $event);"
       class="shrink mx-4"
       hide-details
       light
@@ -95,7 +95,7 @@ export default Vue.extend({
     <v-spacer></v-spacer>
     <v-select
       v-model="os"
-      @change="$emit('update:os', os);"
+      @change="$emit('update:os', $event);"
       class="shrink mx-4"
       hide-details
       solo
