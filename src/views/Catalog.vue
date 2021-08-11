@@ -1,17 +1,20 @@
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import {
+  computed, PropType, ref, defineComponent, Ref, watch, toRefs,
+} from '@vue/composition-api';
 import { getCategories } from '@/lib/utils';
 import {
-  OS, Arch, Extension, InstallState, hasExtensionManagerModel, listExtensions,
+  OS, Arch, Extension, hasExtensionManagerModel, listExtensions, InstallState,
 } from '@/lib/api/extension.service';
 
+import Bus from '@/plugins/bus';
 import AppBar from '@/components/AppBar.vue';
 import ExtensionCard from '@/components/ExtensionCard.vue';
 import CategoryList from '@/components/CategoryList.vue';
 
 const AppId = process.env.VUE_APP_APP_ID as string;
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     category: {
       type: String as PropType<string>,
@@ -26,7 +29,7 @@ export default Vue.extend({
       required: true,
     },
     arch: {
-      type: String as PropType<Arch|undefined>,
+      type: String as PropType<Arch | undefined>,
       default: undefined,
     },
   },
@@ -37,92 +40,91 @@ export default Vue.extend({
     ExtensionCard,
   },
 
-  /**
-   * Typescript doesn't support asyncComputed properly.
-   * This section replicates the type declarations of
-   * the actual values in asyncComputed.  Because it's a plugin
-   * asyncComputed's values will override these.
-   */
-  data() {
-    return {
-      extensions: [] as Extension[],
-      query: this.$route.query.q,
-    };
-  },
-
-  asyncComputed: {
-    extensions: {
-      async get(): Promise<Extension[]> {
-        const params = {
-          appId: AppId,
-          revision: parseInt(this.revision, 10),
-          os: this.os,
-          arch: this.arch,
-          query: this.query,
-        };
-        const { data } = await listExtensions(params);
-        this.$router.push({ name: 'Catalog', query: { q: this.query } }).catch((error) => {
+  setup(props, { root }) {
+    const selectedOs = computed({
+      get(): string {
+        return props.os;
+      },
+      set(os: string): void {
+        const { query } = root.$route;
+        root.$router.push({ name: 'Catalog', params: { os }, query }).catch((error: Error) => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
           }
         });
-        return data;
       },
-      default: [] as Extension[],
-    },
-  },
+    });
+    const query = computed({
+      get(): string {
+        return (root.$route.query.q || '') as string;
+      },
+      set(q: string): void {
+        root.$router.replace({ name: 'Catalog', query: { q } }).catch((error: Error) => {
+          if (error.name !== 'NavigationDuplicated') {
+            throw error;
+          }
+        });
+      },
+    });
+    const propsRefs = toRefs(props);
+    const extensions = ref([]) as Ref<Extension[]>;
 
-  computed: {
-    categories(): [string, number][] {
-      return ([['All', this.extensions.length]] as [string, number][]).concat(getCategories(this.extensions));
-    },
-    filteredExtensions(): Extension[] {
-      if (this.category.toLowerCase() !== 'all') {
-        return this.extensions.filter((e) => e.meta.category === this.category);
+    async function loadExtensions() {
+      const params = {
+        appId: AppId,
+        revision: parseInt(props.revision, 10),
+        os: props.os,
+        arch: props.arch,
+        query: query.value,
+      };
+      const { data } = await listExtensions(params);
+      extensions.value = data;
+    }
+
+    loadExtensions();
+
+    Bus.$on('extension-state-updated', (extensionName: string, state: InstallState) => {
+      extensions.value.forEach((extension) => {
+        if (extensionName === extension.title) {
+          // eslint-disable-next-line no-param-reassign
+          extension.installState = Promise.resolve(state);
+        }
+      });
+    });
+
+    watch([propsRefs.revision, propsRefs.os, propsRefs.arch, query], loadExtensions);
+
+    const categories = computed(() => ((
+      [['All', extensions.value.length]] as [string, number][]).concat(getCategories(extensions.value))));
+
+    const filteredExtensions = computed(() => {
+      if (props.category.toLowerCase() !== 'all') {
+        return extensions.value.filter((e) => e.meta.category === props.category);
       }
-      return this.extensions;
-    },
-    hasExtensionManagerModel(): boolean {
-      return hasExtensionManagerModel();
-    },
-    valid(): string {
-      if (!(this.os in OS)) {
+      return extensions.value;
+    });
+
+    const windowHasExtensionManagerModel = hasExtensionManagerModel();
+
+    const valid = computed(() => {
+      if (!(props.os in OS)) {
         return `Invalid OS.  Choose one of ${Object.keys(OS)}`;
       }
-      if (this.arch !== undefined && !(this.arch in Arch)) {
+      if (props.arch !== undefined && !(props.arch in Arch)) {
         return `Invalid architecutre.  Choose one of ${Object.keys(Arch)}`;
       }
       return '';
-    },
-    selectedOs: {
-      get(): string {
-        return this.$route.params.os;
-      },
-      set(os: string): void {
-        this.$router.push({ name: 'Catalog', params: { os } }).catch((error) => {
-          if (error.name !== 'NavigationDuplicated') {
-            throw error;
-          }
-        });
-      },
-    },
-  },
+    });
 
-  methods: {
-    setExtensionButtonState(extensionName: string, installState: keyof typeof InstallState) {
-      console.log(`Catalog: setExtensionButtonState: ${extensionName} InstallState[${InstallState[installState]}]`);
-    },
-  },
-
-  watch: {
-    query(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        /* See https://github.com/vuejs/vetur/issues/1754#issuecomment-595256501 */
-        /* eslint-disable @typescript-eslint/no-explicit-any */
-        const appbar = this.$refs.appbar as any;
-        appbar.query = newVal;
-      }
-    },
+    return {
+      query,
+      extensions,
+      categories,
+      filteredExtensions,
+      windowHasExtensionManagerModel,
+      valid,
+      selectedOs,
+    };
   },
 });
 </script>
@@ -138,8 +140,8 @@ export default Vue.extend({
       class="app-bar"
       :default-os="os"
       :default-query="query"
-      :query.sync="query"
-      :os.sync="selectedOs"
+      @update:query="query = $event"
+      @update:os="selectedOs = $event"
     />
     <v-row style="height: 100%">
       <v-col
