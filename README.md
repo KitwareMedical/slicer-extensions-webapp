@@ -2,10 +2,10 @@
 
 ## Build-time environment config
 
-| variable | description |
-|----------|-------------|
-| VUE_APP_APP_ID | Girder extension store application ID |
-| VUE_APP_BASE_URL | Base URL of backend, including '/api/v1' |
+| variable | description | default |
+|----------|-------------|---------|
+| VUE_APP_APP_ID | Girder extension store application ID | `5f4474d0e1d8c75dfc705482` |
+| VUE_APP_BASE_URL | Base URL of backend, including '/api/v1' | https://slicer-packages.kitware.com/api/v1 |
 
 ## Project setup
 
