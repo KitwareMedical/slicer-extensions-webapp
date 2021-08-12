@@ -51,8 +51,11 @@ export interface Extension extends RestExtension {
   installState: Promise<InstallState>;
 }
 
-export interface ListExtensionsParams {
+interface GetAppParams {
   appId: string;
+}
+
+export interface ListExtensionsParams extends GetAppParams {
   revision: number;
   os: OS;
   arch: Arch | undefined;
@@ -109,8 +112,7 @@ function listExtensions({
   }));
 }
 
-export interface GetExtensionParams {
-  appId: string;
+export interface GetExtensionParams extends GetAppParams {
   id?: string;
   baseName?: string;
   revision?: number;
