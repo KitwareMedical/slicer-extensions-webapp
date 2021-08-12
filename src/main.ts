@@ -2,12 +2,25 @@ import Vue from 'vue';
 import AsyncComputed from 'vue-async-computed';
 import Notifications from 'vue-notification';
 import CompositionApi from '@vue/composition-api';
+import VueGtag from 'vue-gtag';
 
 import App from './App.vue';
 import vuetify from './plugins/vuetify';
 import bus from './plugins/bus';
 import router from './router';
 import { InstallState } from './lib/api/extension.service';
+
+/**
+ * Enable instrumentation in production
+ * See https://docs.netlify.com/configure-builds/environment-variables/#read-only-variables
+ */
+if (process.env.CONTEXT === 'production') {
+  const gaId = 'UA-97117718-1';
+  Vue.use(VueGtag, {
+    config: { id: gaId },
+    includes: [{ id: gaId }],
+  }, router);
+}
 
 Vue.config.productionTip = false;
 Vue.use(AsyncComputed);
