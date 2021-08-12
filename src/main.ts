@@ -12,9 +12,8 @@ import { InstallState } from './lib/api/extension.service';
 
 /**
  * Enable instrumentation in production
- * See https://docs.netlify.com/configure-builds/environment-variables/#read-only-variables
  */
-if (process.env.CONTEXT === 'production') {
+if (process.env.VUE_APP_NETLIFY_CONTEXT === 'production') {
   const gaId = 'UA-97117718-1';
   Vue.use(VueGtag, {
     config: { id: gaId },
