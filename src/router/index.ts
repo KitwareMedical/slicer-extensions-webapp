@@ -7,6 +7,7 @@ import Catalog from '@/views/Catalog.vue';
 import DataStore from '@/views/DataStore.vue';
 import ExtensionDetails from '@/views/ExtensionDetails.vue';
 import Home from '@/views/Home.vue';
+import OperatingSystem from '@/views/OperatingSystem.vue';
 
 Vue.use(Router);
 
@@ -38,6 +39,16 @@ export default new Router({
       path: '/',
       name: 'Home',
       component: Home,
+    },
+    {
+      path: '/catalog',
+      redirect: '/catalog/All',
+    },
+    {
+      path: '/catalog/:category',
+      name: 'OperatingSystem',
+      component: OperatingSystem,
+      props: true,
     },
     {
       path: '/catalog/:category/:revision/:os/:arch?',

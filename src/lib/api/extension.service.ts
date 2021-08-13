@@ -141,8 +141,58 @@ function getExtension({
   });
 }
 
+interface RestPackage {
+  _id: string;
+  baseParentId: string;
+  baseParentType: string;
+  created: string;
+  creatorId: string;
+  description: string;
+  folderId: string;
+  lowerName: string;
+  name: string;
+  size: number;
+  updated: string;
+  meta: {
+    app_id: string;
+    arch: Arch;
+    baseName: string;
+    build_date: string;
+    os: OS;
+    pre_release: boolean;
+    repository_type: string;
+    repository_url: string;
+    revision: string;
+    version: string;
+  };
+}
+
+export interface GetLatestPackageRevisionParams extends GetAppParams {
+  os: OS;
+  arch: Arch | undefined;
+}
+
+function getLatestPackageRevision({
+  appId, os, arch,
+}: GetLatestPackageRevisionParams): Promise<string | null> {
+  return axios.get<RestPackage[]>(`app/${appId}/package`, {
+    params: {
+      os,
+      arch,
+      limit: 1,
+      sort: 'meta.revision',
+    },
+  }).then(({ data }) => {
+    if (data.length) {
+      return data[0].meta.revision;
+    }
+    return null;
+  });
+}
+
 export {
   getExtension,
+  getLatestPackageRevision,
   hasExtensionManagerModel,
   listExtensions,
 };
