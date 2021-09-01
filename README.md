@@ -13,8 +13,10 @@
 ## Project setup
 
 ``` sh
-yarn
+yarn install
 ```
+
+_Note: "unmet peer dependency" install warnings are expected. Learn more [here](https://github.com/KitwareMedical/slicer-extensions-webapp/issues/43#issuecomment-899549193)._
 
 ### Compiles and hot-reloads for development
 
