@@ -128,7 +128,8 @@ function getExtension({
       baseName,
       os,
       arch,
-      revision,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      app_revision: revision,
     },
   }).then(({ data }) => {
     if (data.length) {
