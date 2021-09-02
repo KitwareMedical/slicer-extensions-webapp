@@ -113,9 +113,9 @@ export interface GetExtensionParams {
   appId: string;
   id?: string;
   baseName?: string;
-  revision: number;
-  os: OS;
-  arch: Arch | undefined;
+  revision?: number;
+  os?: OS;
+  arch?: Arch;
 }
 
 function getExtension({

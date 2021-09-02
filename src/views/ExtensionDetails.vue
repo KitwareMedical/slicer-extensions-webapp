@@ -16,17 +16,21 @@ export default defineComponent({
   props: {
     baseName: {
       type: String as PropType<string>,
-      required: true,
+      default: undefined,
     },
     revision: {
-      type: String as PropType<string>,
-      required: true,
+      type: String as PropType<string|undefined>,
+      default: undefined,
     },
     os: {
-      type: String as PropType<OS>,
-      required: true,
+      type: String as PropType<OS|undefined>,
+      default: undefined,
     },
     arch: {
+      type: String as PropType<Arch|undefined>,
+      default: undefined,
+    },
+    id: {
       type: String as PropType<Arch|undefined>,
       default: undefined,
     },
@@ -45,9 +49,10 @@ export default defineComponent({
       extension.value = await getExtension({
         appId: AppId,
         baseName: props.baseName,
-        revision: parseInt(props.revision, 10),
+        revision: props.revision ? parseInt(props.revision, 10) : undefined,
         os: props.os,
         arch: props.arch,
+        id: props.id,
       });
     }
 
@@ -59,7 +64,13 @@ export default defineComponent({
       }
     });
 
-    watch([propsRefs.baseName, propsRefs.revision, propsRefs.os, propsRefs.arch], loadExtension);
+    watch([
+      propsRefs.baseName,
+      propsRefs.revision,
+      propsRefs.os,
+      propsRefs.arch,
+      propsRefs.id,
+    ], loadExtension);
 
     const selectedOs = computed({
       get(): string {
@@ -78,8 +89,11 @@ export default defineComponent({
 
     const screenshotsAsList = () => extension.value?.meta.screenshots.split(' ');
 
+    const hasOperatingSystemProp = computed(() => props.os !== undefined);
+
     return {
       extension,
+      hasOperatingSystemProp,
       screenshotsAsList,
       selectedOs,
     };
@@ -91,6 +105,7 @@ export default defineComponent({
 <v-container>
   <app-bar
     class="app-bar"
+    :show-operating-system-selector="hasOperatingSystemProp"
     :default-os="os"
     @update:os="selectedOs = $event"
   />
