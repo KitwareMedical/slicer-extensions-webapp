@@ -14,7 +14,6 @@ export default Vue.extend({
   props: {
     defaultOs: {
       type: String as PropType<string>,
-      required: true,
     },
     defaultQuery: {
       type: String as PropType<string>,
@@ -22,6 +21,10 @@ export default Vue.extend({
     showQueryField: {
       type: Boolean as PropType<boolean>,
       default: false,
+    },
+    showOperatingSystemSelector: {
+      type: Boolean as PropType<boolean>,
+      default: true,
     },
   },
 
@@ -84,6 +87,7 @@ export default Vue.extend({
       />
     <v-spacer></v-spacer>
     <v-select
+      v-if="showOperatingSystemSelector"
       v-model="os"
       @change="$emit('update:os', $event);"
       class="shrink mx-4"
