@@ -11,7 +11,9 @@ export default Vue.extend({
 
   methods: {
     goTo(category: string) {
-      this.$router.push({ name: 'Catalog', params: { category }, query: { q: this.$route.query.q } }).catch((error) => {
+      const { query } = this.$route;
+      const location = { name: 'Catalog', params: { category }, query: { q: query.q } };
+      this.$router.push(location).catch((error) => {
         if (error.name !== 'NavigationDuplicated') {
           throw error;
         }

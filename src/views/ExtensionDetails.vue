@@ -66,7 +66,9 @@ export default defineComponent({
         return root.$route.params.os;
       },
       set(os: string): void {
-        root.$router.replace({ params: { os } }).catch((error) => {
+        const { query } = root.$route;
+        const location = { name: 'Extension Details', params: { os }, query };
+        root.$router.push(location).catch((error) => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
           }

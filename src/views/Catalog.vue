@@ -47,7 +47,8 @@ export default defineComponent({
       },
       set(os: string): void {
         const { query } = root.$route;
-        root.$router.push({ name: 'Catalog', params: { os }, query }).catch((error: Error) => {
+        const location = { name: 'Catalog', params: { os }, query };
+        root.$router.push(location).catch((error: Error) => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
           }
