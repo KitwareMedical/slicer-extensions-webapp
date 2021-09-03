@@ -17,6 +17,19 @@ interface ModeManager {
   cancelExtensionScheduledForUninstall(extensionName: string): void;
 }
 
+/**
+ * Legacy interface for Slicer release supporting only Midas_v1 server API
+ */
+interface LegacyAPI {
+  createNotice: Function,
+  slicerappstore: {
+    search: string,
+    applyFilter: Function,
+    setExtensionButtonState: Function,
+  },
+}
+
 interface Window {
   extensions_manager_model: ModeManager | undefined;
+  midas: LegacyAPI;
 }

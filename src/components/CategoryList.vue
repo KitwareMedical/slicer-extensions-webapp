@@ -7,11 +7,23 @@ export default Vue.extend({
       type: Array as PropType<[string, number][]>,
       required: true,
     },
+    legacy: {
+      type: Boolean as PropType<boolean>,
+      default: false,
+    },
   },
 
   methods: {
     goTo(category: string) {
       const { query } = this.$route;
+      if (this.legacy) {
+        this.$router.replace({ query: { ...query, category } }).catch((error) => {
+          if (error.name !== 'NavigationDuplicated') {
+            throw error;
+          }
+        });
+        return;
+      }
       const location = { name: 'Catalog', params: { category }, query: { q: query.q } };
       this.$router.push(location).catch((error) => {
         if (error.name !== 'NavigationDuplicated') {
