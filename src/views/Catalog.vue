@@ -32,6 +32,10 @@ export default defineComponent({
       type: String as PropType<Arch | undefined>,
       default: undefined,
     },
+    legacy: {
+      type: Boolean as PropType<boolean>,
+      default: false,
+    },
   },
 
   components: {
@@ -47,6 +51,14 @@ export default defineComponent({
       },
       set(os: string): void {
         const { query } = root.$route;
+        if (props.legacy) {
+          root.$router.push({ name: 'Catalog Legacy', query: { ...query, os } }).catch((error: Error) => {
+            if (error.name !== 'NavigationDuplicated') {
+              throw error;
+            }
+          });
+          return;
+        }
         const location = { name: 'Catalog', params: { os }, query };
         root.$router.push(location).catch((error: Error) => {
           if (error.name !== 'NavigationDuplicated') {
@@ -57,9 +69,17 @@ export default defineComponent({
     });
     const query = computed({
       get(): string {
-        return (root.$route.query.q || '') as string;
+        return (props.legacy ? root.$route.query.search : root.$route.query.q || '') as string;
       },
       set(q: string): void {
+        if (props.legacy) {
+          root.$router.push({ name: 'Catalog Legacy', query: { ...root.$route.query, search: q } }).catch((error: Error) => {
+            if (error.name !== 'NavigationDuplicated') {
+              throw error;
+            }
+          });
+          return;
+        }
         root.$router.replace({ name: 'Catalog', query: { q } }).catch((error: Error) => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
@@ -145,6 +165,7 @@ export default defineComponent({
         <category-list
           class="category-list"
           :categories="categories"
+          :legacy="legacy"
         />
       </v-col>
       <v-col style="height: 100%">
@@ -152,6 +173,7 @@ export default defineComponent({
           <extension-card
             v-for="extension in filteredExtensions"
             :key="extension._id"
+            :legacy="legacy"
             v-bind="{ extension }"
             class="ma-3"
           />

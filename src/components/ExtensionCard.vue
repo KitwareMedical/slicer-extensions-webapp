@@ -19,6 +19,10 @@ export default Vue.extend({
       type: Number as PropType<number>,
       default: 140,
     },
+    legacy: {
+      type: Boolean as PropType<boolean>,
+      default: false,
+    },
   },
 
   components: { ActionButton },
@@ -36,6 +40,15 @@ export default Vue.extend({
     },
     detailsRoute(): Location {
       const { currentRoute } = this.$router;
+      if (this.legacy) {
+        return {
+          name: 'Extension Details Legacy',
+          query: {
+            baseName: this.extension.meta.baseName,
+            ...currentRoute.query,
+          },
+        };
+      }
       return {
         name: 'Extension Details',
         params: {

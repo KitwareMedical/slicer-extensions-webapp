@@ -34,6 +34,10 @@ export default defineComponent({
       type: String as PropType<Arch|undefined>,
       default: undefined,
     },
+    legacy: {
+      type: Boolean as PropType<boolean>,
+      default: false,
+    },
   },
 
   components: {
@@ -74,10 +78,21 @@ export default defineComponent({
 
     const selectedOs = computed({
       get(): string {
+        if (props.legacy) {
+          return root.$route.query.os.toString();
+        }
         return root.$route.params.os;
       },
       set(os: string): void {
         const { query } = root.$route;
+        if (props.legacy) {
+          root.$router.replace({ query: { ...query, os } }).catch((error) => {
+            if (error.name !== 'NavigationDuplicated') {
+              throw error;
+            }
+          });
+          return;
+        }
         const location = { name: 'Extension Details', params: { os }, query };
         root.$router.push(location).catch((error) => {
           if (error.name !== 'NavigationDuplicated') {

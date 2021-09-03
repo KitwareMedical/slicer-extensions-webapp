@@ -55,3 +55,19 @@ const app = new Vue({
 }).$mount('#app');
 
 window.app = app;
+
+/* Legacy interface */
+window.midas = {
+  createNotice: (message: string, duration: number, state: string) => {
+    app.createNotice(message, duration, state);
+  },
+  slicerappstore: {
+    search: '',
+    applyFilter: () => {
+      app.search(window.midas.slicerappstore.search);
+    },
+    /* eslint-disable @typescript-eslint/no-empty-function */
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    setExtensionButtonState: (_extensionName: string, _state: string) => {},
+  },
+};
