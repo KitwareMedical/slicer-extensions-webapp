@@ -1,5 +1,17 @@
 # slicer-extensions-webapp
 
+## Overview
+
+This project implements the extensions catalog site.
+
+The extensions catalog provides Slicer users with a convenient way to access the extensions
+previously uploaded on the extensions server (described below as the backend).
+
+The extensions catalog can be browsed from the Slicer application using
+the [extensions manager][extensions-manager] or using a regular browser at https://extensions.slicer.org
+
+[extensions-manager]: https://slicer.readthedocs.io/en/latest/user_guide/extensions_manager.html
+
 ## Build-time environment config
 
 | variable | description | default |
