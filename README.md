@@ -19,7 +19,7 @@ the [extensions manager][extensions-manager] or using a regular browser at https
 | VUE_APP_APP_ID | Girder extension store application ID | `5f4474d0e1d8c75dfc705482` |
 | VUE_APP_BASE_URL | Base URL of backend, including '/api/v1' | https://slicer-packages.kitware.com/api/v1 |
 | VUE_APP_GOOGLE_ANALYTICS_ID | Google Analytics ID | `UA-97117718-1` |
-| VUE_APP_NETLIFY_CONTEXT | Name of the Netlify build's [deploy context][netlify-env-vars] | Initialized with the name of the Netlifuy build’s deploy context. |
+| VUE_APP_NETLIFY_CONTEXT | Name of the Netlify build's [deploy context][netlify-env-vars] | Initialized with the name of the Netlify build’s deploy context. |
 
 [netlify-env-vars]: https://docs.netlify.com/configure-builds/environment-variables/#build-metadata
 
