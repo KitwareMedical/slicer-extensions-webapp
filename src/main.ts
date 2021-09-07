@@ -14,7 +14,7 @@ import { InstallState } from './lib/api/extension.service';
  * Enable instrumentation in production
  */
 if (process.env.VUE_APP_NETLIFY_CONTEXT === 'production') {
-  const gaId = 'UA-97117718-1';
+  const gaId = process.env.VUE_APP_GOOGLE_ANALYTICS_ID;
   Vue.use(VueGtag, {
     config: { id: gaId },
     includes: [{ id: gaId }],
