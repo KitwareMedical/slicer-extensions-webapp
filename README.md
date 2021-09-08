@@ -12,6 +12,18 @@ the [extensions manager][extensions-manager] or using a regular browser at https
 
 [extensions-manager]: https://slicer.readthedocs.io/en/latest/user_guide/extensions_manager.html
 
+## Current deployments
+
+| URL | Description |
+|-----|-------------|
+| https://extensions.slicer.org/ | Netlify deployment of the Slicer extensions catalog. |
+| `https://slicer.kitware.com/`[<sup>1</sup>](#fn1) | Assets for Slicer legacy extensions catalog published to [slicer-kitware-com][branch-slicer-kitware-com] branch and served using the [slicer-extensions-legacy-webapp][slicer-extensions-legacy-webapp] Flask application hosted at Kitware. |
+
+1. <span id="fn1"></span> Deployment will be available soon.
+
+[branch-slicer-kitware-com]: https://github.com/KitwareMedical/slicer-extensions-webapp/tree/slicer-kitware-com
+[slicer-extensions-legacy-webapp]: https://github.com/KitwareMedical/slicer-extensions-legacy-webapp
+
 ## Build-time environment config
 
 | variable | description | default |
