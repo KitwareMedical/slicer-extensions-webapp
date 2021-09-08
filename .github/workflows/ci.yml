@@ -28,4 +28,7 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Run Typescript Checks
+        run: yarn lint --no-fix
+
       - run: yarn build
