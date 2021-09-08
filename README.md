@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project implements the extensions catalog site.
+This project implements the Slicer extensions catalog site.
 
 The extensions catalog provides Slicer users with a convenient way to access the extensions
 previously uploaded on the extensions server (described below as the backend).
