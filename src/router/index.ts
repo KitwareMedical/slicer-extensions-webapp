@@ -51,13 +51,13 @@ export default new Router({
       props: true,
     },
     {
-      path: '/slicerappstore',
+      path: '/midas3/slicerappstore',
       name: 'Catalog Legacy',
       component: Catalog,
       props: legacyAppStoreQueryToCatalogProps,
     },
     {
-      path: '/slicerappstore/extension/view',
+      path: '/midas3/slicerappstore/extension/view',
       name: 'Extension Details Legacy',
       component: ExtensionDetails,
       props: legacyAppStoreQueryToExtensionDetailsProps,
