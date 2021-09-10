@@ -34,6 +34,7 @@ jobs:
       - name: Build Legacy Web App
         run: yarn build --dest dist-legacy
         env:
+          CONTEXT: production
           VUE_APP_GOOGLE_ANALYTICS_ID: UA-97117718-6
 
       # See https://github.com/marketplace/actions/github-pages-action
