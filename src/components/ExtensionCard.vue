@@ -74,7 +74,7 @@ export default Vue.extend({
       class="text-subtitle-1 font-weight-bold pt-2"
     >
       <router-link
-        class="black--text extension-title"
+        class="extension-title"
         :to="detailsRoute"
       >
         {{ extension.title }}
@@ -101,8 +101,10 @@ $width: 240px;
   height: 475px;
 }
 .extension-title {
+  color: var(--v-primary-darken2);
   white-space: nowrap;
   text-overflow: ellipsis;
+  text-decoration: none;
   overflow: hidden;
 }
 .thumbnail {
