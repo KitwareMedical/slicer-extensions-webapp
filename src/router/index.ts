@@ -4,6 +4,7 @@ import Router, {
 } from 'vue-router';
 
 import Catalog from '@/views/Catalog.vue';
+import DataStore from '@/views/DataStore.vue';
 import ExtensionDetails from '@/views/ExtensionDetails.vue';
 import Home from '@/views/Home.vue';
 
@@ -61,6 +62,16 @@ export default new Router({
       name: 'Extension Details Legacy',
       component: ExtensionDetails,
       props: legacyAppStoreQueryToExtensionDetailsProps,
+    },
+    {
+      path: '/midas3/slicerdatastore',
+      name: 'DataStore Browse Legacy',
+      component: DataStore,
+    },
+    {
+      path: '/midas3/slicerdatastore/user/login',
+      name: 'DataStore Upload Legacy',
+      component: DataStore,
     },
   ],
 });
