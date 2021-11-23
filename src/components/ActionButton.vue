@@ -46,7 +46,11 @@ export default Vue.extend({
             throw new Error(`Unexpected state encountered: ${state}`);
         }
       } else {
-        // TODO: download the extension
+        const link = document.createElement('a');
+        // eslint-disable-next-line no-underscore-dangle
+        link.href = `https://slicer-packages.kitware.com/api/v1/item/${this.extension._id}/download`;
+        document.body.appendChild(link);
+        link.click();
       }
     },
   },
