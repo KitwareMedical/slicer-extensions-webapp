@@ -102,7 +102,7 @@ export default defineComponent({
       },
     });
 
-    const screenshotsAsList = () => extension.value?.meta.screenshots.split(' ');
+    const screenshotsAsList = () => extension.value?.meta.screenshots?.split(' ');
 
     const hasOperatingSystemProp = computed(() => props.os !== undefined);
 
