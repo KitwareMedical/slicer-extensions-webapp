@@ -105,7 +105,12 @@ export default defineComponent({
 
     const iconUrl = () => extension.value?.meta.icon_url || ExtensionDefaultIconUrl;
 
-    const screenshotsAsList = () => extension.value?.meta.screenshots?.split(' ');
+    const screenshotsAsList = () => {
+      if (extension.value?.meta.screenshots) {
+        return extension.value?.meta.screenshots.split(' ');
+      }
+      return undefined;
+    };
 
     const hasOperatingSystemProp = computed(() => props.os !== undefined);
 
