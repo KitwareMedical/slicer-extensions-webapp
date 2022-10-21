@@ -5,15 +5,13 @@ import { Extension } from '@/lib/api/extension.service';
 
 import ActionButton from '@/components/ActionButton.vue';
 
+const ExtensionDefaultIconUrl = process.env.VUE_APP_EXTENSION_DEFAULT_ICON_URL as string;
+
 export default Vue.extend({
   props: {
     extension: {
       type: Object as PropType<Extension>,
       required: true,
-    },
-    defaultImageUrl: {
-      type: String as PropType<string>,
-      default: 'https://raw.githubusercontent.com/Slicer/Slicer/main/Base/QTGUI/Resources/Icons/ExtensionDefaultIcon.png',
     },
     maxDescriptionLength: {
       type: Number as PropType<number>,
@@ -29,7 +27,7 @@ export default Vue.extend({
 
   computed: {
     iconUrl(): string {
-      return this.extension.meta.icon_url || this.defaultImageUrl;
+      return this.extension.meta.icon_url || ExtensionDefaultIconUrl;
     },
     description(): string {
       const { description } = this.extension.meta;
