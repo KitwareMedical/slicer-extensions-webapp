@@ -13,7 +13,7 @@ export default Vue.extend({
     },
     defaultImageUrl: {
       type: String as PropType<string>,
-      default: 'https://download.slicer.org/static/img/slicer-logo-500.png',
+      default: 'https://raw.githubusercontent.com/Slicer/Slicer/main/Base/QTGUI/Resources/Icons/ExtensionDefaultIcon.png',
     },
     maxDescriptionLength: {
       type: Number as PropType<number>,
