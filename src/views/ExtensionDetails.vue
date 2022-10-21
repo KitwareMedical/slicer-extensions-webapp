@@ -11,6 +11,7 @@ import AppBar from '@/components/AppBar.vue';
 import ActionButton from '@/components/ActionButton.vue';
 
 const AppId = process.env.VUE_APP_APP_ID as string;
+const ExtensionDefaultIconUrl = process.env.VUE_APP_EXTENSION_DEFAULT_ICON_URL as string;
 
 export default defineComponent({
   props: {
@@ -102,6 +103,8 @@ export default defineComponent({
       },
     });
 
+    const iconUrl = () => extension.value?.meta.icon_url || ExtensionDefaultIconUrl;
+
     const screenshotsAsList = () => extension.value?.meta.screenshots?.split(' ');
 
     const hasOperatingSystemProp = computed(() => props.os !== undefined);
@@ -109,6 +112,7 @@ export default defineComponent({
     return {
       extension,
       hasOperatingSystemProp,
+      iconUrl,
       screenshotsAsList,
       selectedOs,
     };
@@ -127,7 +131,7 @@ export default defineComponent({
   <v-row v-if="extension">
     <v-col cols="3">
       <img
-        :src="extension.meta.icon_url"
+        :src="iconUrl()"
         width="100%"
       >
       <action-button
