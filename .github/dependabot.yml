@@ -1,11 +1,18 @@
-# Set update schedule for GitHub Actions
-
 version: 2
 updates:
+  # Set update schedule for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      # Check for updates to GitHub Actions every week
+      interval: "weekly"
+    commit-message:
+      # Prefix all commit messages with "COMP: "
+      prefix: "COMP"
+
+  # Set update schedule for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
       interval: "weekly"
     commit-message:
       # Prefix all commit messages with "COMP: "
