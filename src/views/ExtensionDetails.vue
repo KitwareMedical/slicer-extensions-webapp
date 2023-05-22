@@ -87,7 +87,7 @@ export default defineComponent({
       set(os: string): void {
         const { query } = root.$route;
         if (props.legacy) {
-          root.$router.replace({ query: { ...query, os } }).catch((error) => {
+          root.$router.replace({ query: { ...query, os } }).catch((error: Error) => {
             if (error.name !== 'NavigationDuplicated') {
               throw error;
             }
@@ -95,7 +95,7 @@ export default defineComponent({
           return;
         }
         const location = { name: 'Extension Details', params: { os }, query };
-        root.$router.push(location).catch((error) => {
+        root.$router.push(location).catch((error: Error) => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
           }
