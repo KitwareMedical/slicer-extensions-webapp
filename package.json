@@ -35,7 +35,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "sass": "~1.32.13",
     "sass-loader": "^8.0.2",
-    "typescript": "~3.9.10",
+    "typescript": "~5.1.6",
     "vue-cli-plugin-vuetify": "~2.4.8",
     "vue-template-compiler": "~2.6.14",
     "vuetify-loader": "^1.9.2"
