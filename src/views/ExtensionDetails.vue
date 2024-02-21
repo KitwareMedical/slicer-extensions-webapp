@@ -114,10 +114,16 @@ export default defineComponent({
 
     const hasOperatingSystemProp = computed(() => props.os !== undefined);
 
+    const revisionUrl = () => {
+      const strippedUrl = extension.value?.meta.repository_url.replace(/\.git$/, '');
+      return `${strippedUrl}/commit/${extension.value?.meta.revision}`;
+    };
+
     return {
       extension,
       hasOperatingSystemProp,
       iconUrl,
+      revisionUrl,
       screenshotsAsList,
       selectedOs,
     };
@@ -150,7 +156,8 @@ export default defineComponent({
       <div class="text-h6 mb-2"> {{ extension.meta.category }} </div>
       <div class="text-subtitle-1 mb-2"> {{ extension.meta.contributors }} </div>
       <div class="text-subtitle-1 mb-2">
-        Last update: {{ new Date(extension.updated).toDateString() }}
+        Last update: {{ new Date(extension.updated).toDateString() }}&nbsp;
+        (Revision:&nbsp;<a :href="revisionUrl()">{{ extension.meta.revision.slice(0, 7) }}</a>)
       </div>
       <div class="text-subtitle-1"> {{ extension.meta.description }} </div>
       <v-btn
