@@ -148,38 +148,19 @@ export default defineComponent({
     fluid
     class="catalog"
   >
-    <app-bar
-      ref="appbar"
-      show-query-field
-      class="app-bar"
-      :default-os="os"
-      :default-query="query"
-      @update:query="query = $event"
-      @update:os="selectedOs = $event"
-    />
-    <v-row style="height: 100%">
-      <v-col
-        class="flex-grow-0"
-        style="height: 100%"
-      >
-        <category-list
-          class="category-list"
-          :categories="categories"
-          :legacy="legacy"
-        />
-      </v-col>
-      <v-col style="height: 100%">
-        <v-row class="overflow-scroll justify-begin">
-          <extension-card
-            v-for="extension in filteredExtensions"
-            :key="extension._id"
-            :legacy="legacy"
-            v-bind="{ extension }"
-            class="ma-3"
-          />
-        </v-row>
-      </v-col>
-    </v-row>
+    <v-alert
+      outlined
+      prominent
+      text
+      type="warning"
+    >
+      <h2>We&rsquo;ll be back very soon! Scheduled maintenance happening
+      on March 28th, 2024.</h2>
+      <h4>
+      Sorry for the inconvenience, but we are performing some maintenance at the moment.
+      If you have questions or would like to learn more, see <a href="https://discourse.slicer.org/t/maintenance-of-download-slicer-org-slicer-kitware-com-and-slicer-packages-kitware-com-planned-for-march-28th-2024-3-30pm-to-5-00pm-et/35155">here</a>, otherwise we anticipate the maintenance to last for approximately 1.5 hours, from 3:30 PM to 5:00 PM ET on March 28th, 2024.
+      </h4>
+    </v-alert>
   </v-container>
 </template>
 
