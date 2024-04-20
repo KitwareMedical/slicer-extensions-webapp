@@ -159,7 +159,7 @@ export default defineComponent({
         Last update: {{ new Date(extension.updated).toDateString() }}&nbsp;
         (Revision:&nbsp;<a :href="revisionUrl()">{{ extension.meta.revision.slice(0, 7) }}</a>)
       </div>
-      <div class="text-subtitle-1"> {{ extension.meta.description }} </div>
+      <div class="text-subtitle-1" v-html="extension.meta.description"></div>
       <v-btn
         outlined
         class="my-3 mr-3"
