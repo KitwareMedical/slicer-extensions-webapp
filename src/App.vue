@@ -40,7 +40,8 @@ export default Vue.extend({
         cols="12"
       >
         This site is maintained by <a href="https://kitware.com">@Kitware</a> on behalf of the 3D Slicer community.
-        <br>Last update {{ buildDate }}. Revision <a :href="gitRevisionUrl">{{ gitRevison }}</a>
+        <br>This website was last deployed on {{ buildDate }}.
+        Revision <a :href="gitRevisionUrl">{{ gitRevison }}</a>
       </v-col>
     </v-footer>
   </v-app>
