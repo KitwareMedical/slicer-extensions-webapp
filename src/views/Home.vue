@@ -8,9 +8,15 @@
                 The Slicer community maintains this website for finding and downloading over
                 150 extensions.
                 An extension is a delivery package bundling together one or more Slicer modules.
-                After installing an extension, the associated modules will be presented to the user
-                the same way as built-in modules.
                 </h1>
+                <h1 class="font-weight-light">
+                Once installed, the associated modules appear in Slicer just like built-in ones.
+                To install extensions directly from within Slicer, use the <a href="https://slicer.readthedocs.io/en/latest/user_guide/extensions_manager.html">Extensions Manager</a> interface, which integrates an augmented version of this site.
+                </h1>
+                <v-divider class="mt-5 mb-5"/>
+                <h2 class="font-weight-light">
+                Alternatively, extension packages downloaded from this site can be installed later using the <a href="https://slicer.readthedocs.io/en/latest/user_guide/extensions_manager.html#install-downloaded-extension-packages">Install from file</a> feature, also available in the Extensions Manager.
+                </h2>
                 <v-btn
                     rounded
                     outlined
