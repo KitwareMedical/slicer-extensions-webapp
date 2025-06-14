@@ -30,7 +30,7 @@
     "@vue/eslint-config-airbnb": "^5.3.0",
     "@vue/eslint-config-typescript": "^5.1.0",
     "babel-eslint": "^10.1.0",
-    "date-and-time": "^3.1.1",
+    "date-and-time": "^3.6.0",
     "eslint": "^6.8.0",
     "eslint-plugin-vue": "^6.2.2",
     "git-describe": "^4.1.1",
