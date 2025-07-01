@@ -47,6 +47,8 @@ export default defineComponent({
   },
 
   setup(props, { root }) {
+    const route = root.$route;
+    const router = root.$router;
     const propsRefs = toRefs(props);
     const extension = shallowRef(null as Extension | null);
 
@@ -79,15 +81,16 @@ export default defineComponent({
 
     const selectedOs = computed({
       get(): string {
+        // Explicitly use root.$route as it is a reactive variable
         if (props.legacy) {
           return root.$route.query.os.toString();
         }
         return root.$route.params.os;
       },
       set(os: string): void {
-        const { query } = root.$route;
+        const { query } = route;
         if (props.legacy) {
-          root.$router.replace({ query: { ...query, os } }).catch((error: Error) => {
+          router.replace({ query: { ...query, os } }).catch((error: Error) => {
             if (error.name !== 'NavigationDuplicated') {
               throw error;
             }
@@ -95,7 +98,7 @@ export default defineComponent({
           return;
         }
         const location = { name: 'Extension Details', params: { os }, query };
-        root.$router.push(location).catch((error: Error) => {
+        router.push(location).catch((error: Error) => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
           }
