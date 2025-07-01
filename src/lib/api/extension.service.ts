@@ -43,6 +43,7 @@ interface RestExtension {
     repository_url: string;
     revision: string;
     screenshots: string;
+    contributors: string;
   };
 }
 
