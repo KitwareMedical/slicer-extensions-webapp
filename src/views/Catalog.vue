@@ -49,17 +49,17 @@ export default defineComponent({
       get(): string {
         return props.os;
       },
-      set(os: string): void {
+      set(newOs: string): void {
         const { query } = root.$route;
         if (props.legacy) {
-          root.$router.push({ name: 'Catalog Legacy', query: { ...query, os } }).catch((error: Error) => {
+          root.$router.push({ name: 'Catalog Legacy', query: { ...query, os: newOs } }).catch((error: Error) => {
             if (error.name !== 'NavigationDuplicated') {
               throw error;
             }
           });
           return;
         }
-        const location = { name: 'Catalog', params: { os }, query };
+        const location = { name: 'Catalog', params: { os: newOs }, query };
         root.$router.push(location).catch((error: Error) => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
