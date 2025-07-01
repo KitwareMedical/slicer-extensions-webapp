@@ -45,14 +45,17 @@ export default defineComponent({
   },
 
   setup(props, { root }) {
+    const route = root.$route;
+    const router = root.$router;
+
     const selectedOs = computed({
       get(): string {
         return props.os;
       },
       set(newOs: string): void {
-        const { query } = root.$route;
+        const { query } = route;
         if (props.legacy) {
-          root.$router.push({ name: 'Catalog Legacy', query: { ...query, os: newOs } }).catch((error: Error) => {
+          router.push({ name: 'Catalog Legacy', query: { ...query, os: newOs } }).catch((error: Error) => {
             if (error.name !== 'NavigationDuplicated') {
               throw error;
             }
@@ -60,7 +63,7 @@ export default defineComponent({
           return;
         }
         const location = { name: 'Catalog', params: { os: newOs }, query };
-        root.$router.push(location).catch((error: Error) => {
+        router.push(location).catch((error: Error) => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
           }
@@ -70,18 +73,19 @@ export default defineComponent({
 
     const query = computed({
       get(): string {
+        // Explicitly use root.$route as it is a reactive variable
         return (props.legacy ? root.$route.query.search : root.$route.query.q || '') as string;
       },
       set(q: string): void {
         if (props.legacy) {
-          root.$router.push({ name: 'Catalog Legacy', query: { ...root.$route.query, search: q } }).catch((error: Error) => {
+          router.push({ name: 'Catalog Legacy', query: { ...route.query, search: q } }).catch((error: Error) => {
             if (error.name !== 'NavigationDuplicated') {
               throw error;
             }
           });
           return;
         }
-        root.$router.replace({ name: 'Catalog', query: { q } }).catch((error: Error) => {
+        router.replace({ name: 'Catalog', query: { q } }).catch((error: Error) => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
           }
