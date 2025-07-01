@@ -15,7 +15,7 @@ export default Vue.extend({
     buildDate(): string {
       return BuildDate;
     },
-    gitRevison(): string {
+    gitRevision(): string {
       return GitHash.slice(0, 7);
     },
     gitRevisionUrl(): string {
@@ -41,7 +41,7 @@ export default Vue.extend({
       >
         This site is maintained by <a href="https://kitware.com">@Kitware</a> on behalf of the 3D Slicer community.
         <br>This website was last deployed on {{ buildDate }}.
-        Revision <a :href="gitRevisionUrl">{{ gitRevison }}</a>
+        Revision <a :href="gitRevisionUrl">{{ gitRevision }}</a>
       </v-col>
     </v-footer>
   </v-app>
