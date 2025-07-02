@@ -84,10 +84,8 @@ export default defineComponent({
 
     const selectedOs = computed({
       get(): string {
-        if (props.legacy) {
-          return route.query.os.toString();
-        }
-        return route.params.os;
+        const os = props.legacy ? route.query.os : route.params.os;
+        return typeof os === 'string' ? os : '';
       },
       set(os: string): void {
         const { query } = route;
