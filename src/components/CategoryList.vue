@@ -1,7 +1,12 @@
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import {
+  defineComponent, PropType,
+} from '@vue/composition-api';
+import {
+  useRoute, useRouter,
+} from 'vue2-helpers/vue-router';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'CategoryList',
 
   props: {
@@ -15,11 +20,14 @@ export default Vue.extend({
     },
   },
 
-  methods: {
-    goTo(category: string) {
-      const { query } = this.$route;
-      if (this.legacy) {
-        this.$router.replace({ query: { ...query, category } }).catch((error) => {
+  setup(props) {
+    const route = useRoute();
+    const router = useRouter();
+
+    const goTo = (category: string) => {
+      const { query } = route;
+      if (props.legacy) {
+        router.replace({ query: { ...query, category } }).catch((error: Error) => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
           }
@@ -27,15 +35,17 @@ export default Vue.extend({
         return;
       }
       const location = { name: 'Catalog', params: { category }, query: { q: query.q } };
-      this.$router.push(location).catch((error) => {
+      router.push(location).catch((error: Error) => {
         if (error.name !== 'NavigationDuplicated') {
           throw error;
         }
       });
-    },
+    };
+    return { goTo };
   },
 });
 </script>
+
 <template>
   <v-col
     class="pa-0 d-flex flex-column"
