@@ -1,5 +1,7 @@
 <script lang="ts">
-import Vue from 'vue';
+import {
+  computed, defineComponent,
+} from '@vue/composition-api';
 import {
   hasExtensionManagerModel,
 } from '@/lib/api/extension.service';
@@ -7,22 +9,21 @@ import {
 const BuildDate = process.env.VUE_APP_BUILD_DATE as string;
 const GitHash = process.env.VUE_APP_GIT_HASH as string;
 
-export default Vue.extend({
+export default defineComponent({
   name: 'App',
 
-  computed: {
-    hasExtensionManagerModel(): boolean {
-      return hasExtensionManagerModel();
-    },
-    buildDate(): string {
-      return BuildDate;
-    },
-    gitRevision(): string {
-      return GitHash.slice(0, 7);
-    },
-    gitRevisionUrl(): string {
-      return `https://github.com/KitwareMedical/slicer-extensions-webapp/commit/${GitHash}`;
-    },
+  setup() {
+    const hasExtensionManagerModelComputed = computed(() => hasExtensionManagerModel());
+    const buildDate = computed(() => BuildDate);
+    const gitRevision = computed(() => GitHash.slice(0, 7));
+    const gitRevisionUrl = computed(() => `https://github.com/KitwareMedical/slicer-extensions-webapp/commit/${GitHash}`);
+
+    return {
+      hasExtensionManagerModel: hasExtensionManagerModelComputed,
+      buildDate,
+      gitRevision,
+      gitRevisionUrl,
+    };
   },
 });
 
