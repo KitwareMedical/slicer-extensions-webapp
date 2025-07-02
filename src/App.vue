@@ -8,6 +8,8 @@ const BuildDate = process.env.VUE_APP_BUILD_DATE as string;
 const GitHash = process.env.VUE_APP_GIT_HASH as string;
 
 export default Vue.extend({
+  name: 'App',
+
   computed: {
     hasExtensionManagerModel(): boolean {
       return hasExtensionManagerModel();

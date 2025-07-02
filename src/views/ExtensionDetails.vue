@@ -17,6 +17,8 @@ const AppId = process.env.VUE_APP_APP_ID as string;
 const ExtensionDefaultIconUrl = process.env.VUE_APP_EXTENSION_DEFAULT_ICON_URL as string;
 
 export default defineComponent({
+  name: 'ExtensionDetailsView',
+
   props: {
     baseName: {
       type: String as PropType<string>,

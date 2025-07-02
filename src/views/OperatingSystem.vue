@@ -12,6 +12,8 @@ interface OperatingSystemToRevisionMapping {
 }
 
 export default Vue.extend({
+  name: 'OperatingSystemView',
+
   props: {
     category: {
       type: String as PropType<string>,

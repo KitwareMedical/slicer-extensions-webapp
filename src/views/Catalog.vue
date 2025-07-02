@@ -18,6 +18,8 @@ import CategoryList from '@/components/CategoryList.vue';
 const AppId = process.env.VUE_APP_APP_ID as string;
 
 export default defineComponent({
+  name: 'CatalogView',
+
   props: {
     category: {
       type: String as PropType<string>,

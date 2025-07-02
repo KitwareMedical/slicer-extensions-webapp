@@ -15,6 +15,8 @@ const defaultButtonOptions: ButtonOptions = {
 };
 
 export default Vue.extend({
+  name: 'ActionButton',
+
   props: {
     extension: {
       type: Object as PropType<Extension>,

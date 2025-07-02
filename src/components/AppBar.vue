@@ -11,6 +11,8 @@ interface VueSelectItem {
 }
 
 export default Vue.extend({
+  name: 'AppBar',
+
   props: {
     defaultOs: {
       type: String as PropType<string>,
