@@ -122,9 +122,10 @@ export default defineComponent({
     const categories = computed(() => ((
       [['All', extensions.value.length]] as [string, number][]).concat(getCategories(extensions.value))));
 
-    const filteredExtensions = computed(() => {
+    const filteredExtensions = computed((): Extension[] => {
+      const allExtensions = extensions.value;
       if (props.category.toLowerCase() !== 'all') {
-        return extensions.value.filter((e) => e.meta.category === props.category);
+        return allExtensions.filter((e) => e.meta.category === props.category);
       }
       return extensions.value;
     });
