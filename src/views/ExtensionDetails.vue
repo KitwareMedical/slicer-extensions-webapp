@@ -3,6 +3,9 @@ import {
   computed, defineComponent, PropType, shallowRef, toRefs, watch,
 } from '@vue/composition-api';
 import {
+  useRoute, useRouter,
+} from 'vue2-helpers/vue-router';
+import {
   Extension, getExtension, OS, Arch,
 } from '@/lib/api/extension.service';
 import Bus from '@/plugins/bus';
@@ -46,9 +49,9 @@ export default defineComponent({
     AppBar,
   },
 
-  setup(props, { root }) {
-    const route = root.$route;
-    const router = root.$router;
+  setup(props) {
+    const route = useRoute();
+    const router = useRouter();
     const propsRefs = toRefs(props);
     const extension = shallowRef(null as Extension | null);
 
@@ -81,11 +84,10 @@ export default defineComponent({
 
     const selectedOs = computed({
       get(): string {
-        // Explicitly use root.$route as it is a reactive variable
         if (props.legacy) {
-          return root.$route.query.os.toString();
+          return route.query.os.toString();
         }
-        return root.$route.params.os;
+        return route.params.os;
       },
       set(os: string): void {
         const { query } = route;

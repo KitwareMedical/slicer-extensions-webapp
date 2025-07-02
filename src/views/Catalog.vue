@@ -2,6 +2,9 @@
 import {
   computed, PropType, defineComponent, Ref, watch, toRefs, shallowRef,
 } from '@vue/composition-api';
+import {
+  useRoute, useRouter,
+} from 'vue2-helpers/vue-router';
 import { getCategories } from '@/lib/utils';
 import {
   OS, Arch, Extension, hasExtensionManagerModel, listExtensions,
@@ -44,9 +47,9 @@ export default defineComponent({
     ExtensionCard,
   },
 
-  setup(props, { root }) {
-    const route = root.$route;
-    const router = root.$router;
+  setup(props) {
+    const route = useRoute();
+    const router = useRouter();
 
     const selectedOs = computed({
       get(): string {
@@ -73,8 +76,7 @@ export default defineComponent({
 
     const query = computed({
       get(): string {
-        // Explicitly use root.$route as it is a reactive variable
-        return (props.legacy ? root.$route.query.search : root.$route.query.q || '') as string;
+        return (props.legacy ? route.query.search : route.query.q || '') as string;
       },
       set(q: string): void {
         if (props.legacy) {
