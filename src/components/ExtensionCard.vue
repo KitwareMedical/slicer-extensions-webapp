@@ -1,13 +1,16 @@
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-import { Location } from 'vue-router';
+import {
+  defineComponent, PropType, computed,
+} from '@vue/composition-api';
+import {
+  useRoute, useRouter,
+} from 'vue2-helpers/vue-router';
 import { Extension } from '@/lib/api/extension.service';
-
 import ActionButton from '@/components/ActionButton.vue';
 
 const ExtensionDefaultIconUrl = process.env.VUE_APP_EXTENSION_DEFAULT_ICON_URL as string;
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ExtensionCard',
 
   props: {
@@ -27,36 +30,45 @@ export default Vue.extend({
 
   components: { ActionButton },
 
-  computed: {
-    iconUrl(): string {
-      return this.extension.meta.icon_url || ExtensionDefaultIconUrl;
-    },
-    description(): string {
-      const { description } = this.extension.meta;
-      if (description.length > this.maxDescriptionLength) {
-        return description.slice(0, this.maxDescriptionLength).concat('...');
+  setup(props) {
+    const route = useRoute();
+    const router = useRouter();
+
+    const iconUrl = computed(() => props.extension.meta.icon_url || ExtensionDefaultIconUrl);
+    const description = computed(() => {
+      const desc = props.extension.meta.description;
+      if (desc.length > props.maxDescriptionLength) {
+        return desc.slice(0, props.maxDescriptionLength).concat('...');
       }
-      return this.extension.meta.description;
-    },
-    detailsRoute(): Location {
-      const { currentRoute } = this.$router;
-      if (this.legacy) {
+      return desc;
+    });
+    const detailsRoute = computed(() => {
+      if (props.legacy) {
         return {
           name: 'Extension Details Legacy',
           query: {
-            baseName: this.extension.meta.baseName,
-            ...currentRoute.query,
+            baseName: props.extension.meta.baseName,
+            ...route.query,
           },
         };
       }
       return {
         name: 'Extension Details',
         params: {
-          baseName: this.extension.meta.baseName,
-          ...currentRoute.params,
+          baseName: props.extension.meta.baseName,
+          ...route.params,
         },
       };
-    },
+    });
+    const goToDetails = () => {
+      router.push(detailsRoute.value);
+    };
+    return {
+      iconUrl,
+      description,
+      detailsRoute,
+      goToDetails,
+    };
   },
 });
 </script>
