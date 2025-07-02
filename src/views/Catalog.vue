@@ -67,6 +67,7 @@ export default defineComponent({
         });
       },
     });
+
     const query = computed({
       get(): string {
         return (props.legacy ? root.$route.query.search : root.$route.query.q || '') as string;
@@ -87,6 +88,7 @@ export default defineComponent({
         });
       },
     });
+
     const propsRefs = toRefs(props);
     const extensions = shallowRef([]) as Ref<Extension[]>;
 
@@ -106,7 +108,12 @@ export default defineComponent({
 
     Bus.$on('extension-state-updated', () => loadExtensions());
 
-    watch([propsRefs.revision, propsRefs.os, propsRefs.arch, query], loadExtensions);
+    watch([
+      propsRefs.revision,
+      propsRefs.os,
+      propsRefs.arch,
+      query,
+    ], loadExtensions);
 
     const categories = computed(() => ((
       [['All', extensions.value.length]] as [string, number][]).concat(getCategories(extensions.value))));
