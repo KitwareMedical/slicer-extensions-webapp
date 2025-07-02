@@ -100,7 +100,7 @@ export default defineComponent({
     const propsRefs = toRefs(props);
     const extensions = shallowRef([]) as Ref<Extension[]>;
 
-    async function loadExtensions() {
+    const loadExtensions = async () => {
       const params = {
         appId: AppId,
         revision: parseInt(props.revision, 10),
@@ -110,7 +110,7 @@ export default defineComponent({
       };
       const { data } = await listExtensions(params);
       extensions.value = data;
-    }
+    };
 
     loadExtensions();
 
