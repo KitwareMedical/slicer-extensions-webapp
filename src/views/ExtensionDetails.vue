@@ -57,7 +57,7 @@ export default defineComponent({
     const propsRefs = toRefs(props);
     const extension = shallowRef(null as Extension | null);
 
-    async function loadExtension() {
+    const loadExtension = async () => {
       extension.value = await getExtension({
         appId: AppId,
         baseName: props.baseName,
@@ -66,7 +66,7 @@ export default defineComponent({
         arch: props.arch,
         id: props.id,
       });
-    }
+    };
 
     loadExtension();
 
