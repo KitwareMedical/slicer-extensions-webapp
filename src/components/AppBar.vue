@@ -14,6 +14,7 @@ export default Vue.extend({
   props: {
     defaultOs: {
       type: String as PropType<string>,
+      required: true,
     },
     defaultQuery: {
       type: String as PropType<string>,
@@ -25,6 +26,10 @@ export default Vue.extend({
     showOperatingSystemSelector: {
       type: Boolean as PropType<boolean>,
       default: true,
+    },
+    legacy: {
+      type: Boolean as PropType<boolean>,
+      default: false,
     },
   },
 
