@@ -44,19 +44,25 @@ export default defineComponent({
     });
     const detailsRoute = computed(() => {
       if (props.legacy) {
+        // Remove `category` from query
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { category, ...queryWithoutCategory } = route.query;
         return {
           name: 'Extension Details Legacy',
           query: {
             baseName: props.extension.meta.baseName,
-            ...route.query,
+            ...queryWithoutCategory,
           },
         };
       }
+      // Remove `category` from params
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { category, ...paramsWithoutCategory } = route.params;
       return {
         name: 'Extension Details',
         params: {
           baseName: props.extension.meta.baseName,
-          ...route.params,
+          ...paramsWithoutCategory,
         },
       };
     });
