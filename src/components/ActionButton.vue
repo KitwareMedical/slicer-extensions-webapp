@@ -1,5 +1,7 @@
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import {
+  defineComponent, PropType, ref, watch,
+} from '@vue/composition-api';
 import { Extension, InstallState } from '@/lib/api/extension.service';
 
 interface ButtonOptions {
@@ -14,7 +16,7 @@ const defaultButtonOptions: ButtonOptions = {
   text: 'Download',
 };
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ActionButton',
 
   props: {
@@ -28,21 +30,62 @@ export default Vue.extend({
     },
   },
 
-  methods: {
-    async handleClick() {
-      const state = await this.extension.installState;
-      const manager = window.extensions_manager_model;
+  setup(props) {
+    const button = ref<ButtonOptions>(defaultButtonOptions);
+
+    // Update button options based on extension state
+    const updateButton = async () => {
+      const state = await props.extension.installState;
+      switch (state) {
+        case InstallState.Installed:
+          button.value = {
+            icon: 'mdi-toy-brick-remove-outline',
+            color: 'success',
+            text: 'Uninstall',
+          };
+          break;
+        case InstallState.ScheduledForUninstall:
+          button.value = {
+            icon: 'mdi-toy-brick-remove',
+            color: 'error',
+            text: 'Uninstall',
+          };
+          break;
+        case InstallState.NotInstalled:
+          button.value = {
+            icon: 'mdi-download',
+            color: 'primary',
+            text: 'Install',
+          };
+          break;
+        default:
+          button.value = defaultButtonOptions;
+      }
+    };
+
+    watch(
+      () => props.extension,
+      () => {
+        updateButton();
+      },
+      { immediate: true },
+    );
+
+    const handleClick = async () => {
+      const state = await props.extension.installState;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const manager = (window as any).extensions_manager_model;
       if (manager) {
         switch (state) {
           case InstallState.Installed:
-            manager.scheduleExtensionForUninstall(this.extension.title);
+            manager.scheduleExtensionForUninstall(props.extension.title);
             break;
           case InstallState.NotInstalled:
             // eslint-disable-next-line no-underscore-dangle
-            manager.downloadAndInstallExtension(this.extension._id);
+            manager.downloadAndInstallExtension(props.extension._id);
             break;
           case InstallState.ScheduledForUninstall:
-            manager.cancelExtensionScheduledForUninstall(this.extension.title);
+            manager.cancelExtensionScheduledForUninstall(props.extension.title);
             break;
           default:
             throw new Error(`Unexpected state encountered: ${state}`);
@@ -50,43 +93,16 @@ export default Vue.extend({
       } else {
         const link = document.createElement('a');
         // eslint-disable-next-line no-underscore-dangle
-        link.href = `https://slicer-packages.kitware.com/api/v1/item/${this.extension._id}/download`;
+        link.href = `https://slicer-packages.kitware.com/api/v1/item/${props.extension._id}/download`;
         document.body.appendChild(link);
         link.click();
       }
-    },
-  },
+    };
 
-  asyncComputed: {
-    button: {
-      get(): Promise<ButtonOptions> {
-        return this.extension.installState.then((state) => {
-          switch (state) {
-            case InstallState.Installed:
-              return {
-                icon: 'mdi-toy-brick-remove-outline',
-                color: 'success',
-                text: 'Uninstall',
-              };
-            case InstallState.ScheduledForUninstall:
-              return {
-                icon: 'mdi-toy-brick-remove',
-                color: 'error',
-                text: 'Uninstall',
-              };
-            case InstallState.NotInstalled:
-              return {
-                icon: 'mdi-download',
-                color: 'primary',
-                text: 'Install',
-              };
-            default:
-              return defaultButtonOptions;
-          }
-        });
-      },
-      default: defaultButtonOptions,
-    },
+    return {
+      button,
+      handleClick,
+    };
   },
 });
 </script>
