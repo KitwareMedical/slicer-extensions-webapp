@@ -1,6 +1,7 @@
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-
+import {
+  defineComponent, PropType, ref, onActivated, onMounted, computed,
+} from '@vue/composition-api';
 import { getLatestPackageRevision, OS } from '@/lib/api/extension.service';
 
 const AppId = process.env.VUE_APP_APP_ID as string;
@@ -11,7 +12,7 @@ interface OperatingSystemToRevisionMapping {
   win: string | null;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'OperatingSystemView',
 
   props: {
@@ -21,32 +22,43 @@ export default Vue.extend({
     },
   },
 
-  data() {
-    return {
-      revisionByOperatingSystems: {
-        linux: null,
-        macosx: null,
-        win: null,
-      } as OperatingSystemToRevisionMapping,
-    };
-  },
+  setup(props) {
+    const revisionByOperatingSystems = ref<OperatingSystemToRevisionMapping>({
+      linux: null,
+      macosx: null,
+      win: null,
+    });
 
-  methods: {
-    async setRevisionByOperatingSystems() {
-      this.revisionByOperatingSystems = {
+    const setRevisionByOperatingSystems = async () => {
+      revisionByOperatingSystems.value = {
         linux: await getLatestPackageRevision({ appId: AppId, os: OS.linux, arch: undefined }),
         macosx: await getLatestPackageRevision({ appId: AppId, os: OS.macosx, arch: undefined }),
         win: await getLatestPackageRevision({ appId: AppId, os: OS.windows, arch: undefined }),
       };
-    },
-  },
+    };
 
-  activated() {
-    this.setRevisionByOperatingSystems();
-  },
+    onMounted(() => {
+      setRevisionByOperatingSystems();
+    });
+    onActivated(() => {
+      setRevisionByOperatingSystems();
+    });
 
+    return {
+      revisionByOperatingSystems,
+      setRevisionByOperatingSystems,
+      linuxRoute: computed(() => (revisionByOperatingSystems.value.linux
+        ? { name: 'Catalog', params: { category: props.category, revision: revisionByOperatingSystems.value.linux, os: 'linux' } }
+        : undefined)),
+      macosxRoute: computed(() => (revisionByOperatingSystems.value.macosx
+        ? { name: 'Catalog', params: { category: props.category, revision: revisionByOperatingSystems.value.macosx, os: 'macosx' } }
+        : undefined)),
+      winRoute: computed(() => (revisionByOperatingSystems.value.win
+        ? { name: 'Catalog', params: { category: props.category, revision: revisionByOperatingSystems.value.win, os: 'win' } }
+        : undefined)),
+    };
+  },
 });
-
 </script>
 
 <template>
@@ -61,11 +73,7 @@ export default Vue.extend({
             :loading="revisionByOperatingSystems.linux == undefined"
             :disabled="revisionByOperatingSystems.linux == undefined"
             color="success"
-            :to="{ name: 'Catalog', params: {
-              category: category,
-              revision: revisionByOperatingSystems.linux,
-              os: 'linux',
-            }}"
+            :to="linuxRoute"
           >
             Linux
             <template v-slot:loader>
@@ -81,11 +89,7 @@ export default Vue.extend({
             :loading="revisionByOperatingSystems.macosx == undefined"
             :disabled="revisionByOperatingSystems.macosx == undefined"
             color="success"
-            :to="{ name: 'Catalog', params: {
-              category: category,
-              revision: revisionByOperatingSystems.macosx,
-              os: 'macosx',
-            }}"
+            :to="macosxRoute"
           >
             macOS
             <template v-slot:loader>
@@ -101,11 +105,7 @@ export default Vue.extend({
             :loading="revisionByOperatingSystems.win == undefined"
             :disabled="revisionByOperatingSystems.win == undefined"
             color="success"
-            :to="{ name: 'Catalog', params: {
-              category: category,
-              revision: revisionByOperatingSystems.win,
-              os: 'win',
-            }}"
+            :to="winRoute"
           >
             Windows
             <template v-slot:loader>
