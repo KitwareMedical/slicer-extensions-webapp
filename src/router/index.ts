@@ -1,7 +1,6 @@
-import Vue from 'vue';
-import Router, {
-  Route,
-} from 'vue-router';
+import {
+  createRouter, RouteLocationNormalized,
+} from 'vue2-helpers/vue-router';
 
 import Catalog from '@/views/Catalog.vue';
 import DataStore from '@/views/DataStore.vue';
@@ -9,9 +8,7 @@ import ExtensionDetails from '@/views/ExtensionDetails.vue';
 import Home from '@/views/Home.vue';
 import OperatingSystem from '@/views/OperatingSystem.vue';
 
-Vue.use(Router);
-
-function legacyAppStoreQueryToCatalogProps(route: Route) {
+function legacyAppStoreQueryToCatalogProps(route: RouteLocationNormalized) {
   return {
     category: route.query.category || 'All',
     revision: route.query.revision,
@@ -21,7 +18,7 @@ function legacyAppStoreQueryToCatalogProps(route: Route) {
   };
 }
 
-function legacyAppStoreQueryToExtensionDetailsProps(route: Route) {
+function legacyAppStoreQueryToExtensionDetailsProps(route: RouteLocationNormalized) {
   return {
     baseName: route.query.baseName,
     revision: route.query.revision,
@@ -32,7 +29,7 @@ function legacyAppStoreQueryToExtensionDetailsProps(route: Route) {
   };
 }
 
-export default new Router({
+const router = createRouter({
   mode: 'history',
   routes: [
     {
@@ -86,3 +83,5 @@ export default new Router({
     },
   ],
 });
+
+export default router;
