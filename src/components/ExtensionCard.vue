@@ -8,6 +8,8 @@ import ActionButton from '@/components/ActionButton.vue';
 const ExtensionDefaultIconUrl = process.env.VUE_APP_EXTENSION_DEFAULT_ICON_URL as string;
 
 export default Vue.extend({
+  name: 'ExtensionCard',
+
   props: {
     extension: {
       type: Object as PropType<Extension>,

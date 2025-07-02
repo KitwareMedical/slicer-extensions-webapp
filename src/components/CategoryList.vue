@@ -2,6 +2,8 @@
 import Vue, { PropType } from 'vue';
 
 export default Vue.extend({
+  name: 'CategoryList',
+
   props: {
     categories: {
       type: Array as PropType<[string, number][]>,
