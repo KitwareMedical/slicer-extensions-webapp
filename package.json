@@ -33,7 +33,7 @@
     "babel-eslint": "^10.1.0",
     "date-and-time": "^3.6.0",
     "eslint": "^6.8.0",
-    "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-vue": "^7.20.0",
     "git-describe": "^4.1.1",
     "sass": "~1.32.13",
     "sass-loader": "^8.0.2",
