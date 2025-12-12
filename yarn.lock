@@ -9524,10 +9524,10 @@ vuetify-loader@^1.9.2:
     file-loader "^6.2.0"
     loader-utils "^2.0.0"
 
-vuetify@~2.6.15:
-  version "2.6.16"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.6.16.tgz#cea703ce886626a77eff7ab39f3cfb3616e27af2"
-  integrity sha512-3yONosmPC2rKU4sVv4zZ/OkeVRC440DRPwMgDR8JVDco34iU4+WpWe8UeaFpKMqaLaH5nCrcx9elUEvXLCJARg==
+vuetify@~3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.0.0.tgz#372eed0663f0ffba53439cd99aa46031e560b0f4"
+  integrity sha512-0olLmKWb+oTaebGTM02+1fWaAgnGDuIt86K3jDv2LnALQ2atSzhDS1SSASJsJCZ2PgFBdDAeJVLcNWWavRYAlQ==
 
 watchpack-chokidar2@^2.0.1:
   version "2.0.1"
