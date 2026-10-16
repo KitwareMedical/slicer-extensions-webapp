@@ -84,29 +84,23 @@ export default defineComponent({
       propsRefs.id,
     ], loadExtension);
 
-    const selectedOs = computed({
-      get(): string {
-        const os = props.legacy ? route.query.os : route.params.os;
-        return typeof os === 'string' ? os : '';
-      },
-      set(os: string): void {
-        const { query } = route;
-        if (props.legacy) {
-          router.replace({ query: { ...query, os } }).catch((error: Error) => {
-            if (error.name !== 'NavigationDuplicated') {
-              throw error;
-            }
-          });
-          return;
-        }
-        const location = { name: 'Extension Details', params: { os }, query };
-        router.push(location).catch((error: Error) => {
+    const selectPlatform = ({ os, arch }: { os: OS; arch: Arch }): void => {
+      const { query } = route;
+      if (props.legacy) {
+        router.replace({ query: { ...query, os, arch } }).catch((error: Error) => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
           }
         });
-      },
-    });
+        return;
+      }
+      const location = { name: 'Extension Details', params: { os, arch }, query };
+      router.push(location).catch((error: Error) => {
+        if (error.name !== 'NavigationDuplicated') {
+          throw error;
+        }
+      });
+    };
 
     const iconUrl = () => extension.value?.meta.icon_url || ExtensionDefaultIconUrl;
 
@@ -130,7 +124,7 @@ export default defineComponent({
       iconUrl,
       revisionUrl,
       screenshotsAsList,
-      selectedOs,
+      selectPlatform,
     };
   },
 });
@@ -142,7 +136,8 @@ export default defineComponent({
     class="app-bar"
     :show-operating-system-selector="hasOperatingSystemProp"
     :default-os="os"
-    @update:os="selectedOs = $event"
+    :default-arch="arch"
+    @update:platform="selectPlatform"
   />
   <v-row v-if="extension">
     <v-col cols="3">

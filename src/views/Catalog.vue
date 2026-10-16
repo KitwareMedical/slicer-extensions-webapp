@@ -53,28 +53,23 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
 
-    const selectedOs = computed({
-      get(): string {
-        return props.os;
-      },
-      set(newOs: string): void {
-        const { query } = route;
-        if (props.legacy) {
-          router.push({ name: 'Catalog Legacy', query: { ...query, os: newOs } }).catch((error: Error) => {
-            if (error.name !== 'NavigationDuplicated') {
-              throw error;
-            }
-          });
-          return;
-        }
-        const location = { name: 'Catalog', params: { os: newOs }, query };
-        router.push(location).catch((error: Error) => {
+    const selectPlatform = ({ os, arch }: { os: OS; arch: Arch }): void => {
+      const { query } = route;
+      if (props.legacy) {
+        router.push({ name: 'Catalog Legacy', query: { ...query, os, arch } }).catch((error: Error) => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
           }
         });
-      },
-    });
+        return;
+      }
+      const location = { name: 'Catalog', params: { os, arch }, query };
+      router.push(location).catch((error: Error) => {
+        if (error.name !== 'NavigationDuplicated') {
+          throw error;
+        }
+      });
+    };
 
     const query = computed({
       get(): string {
@@ -153,7 +148,7 @@ export default defineComponent({
       filteredExtensions,
       windowHasExtensionManagerModel,
       valid,
-      selectedOs,
+      selectPlatform,
     };
   },
 });
@@ -169,9 +164,10 @@ export default defineComponent({
       show-query-field
       class="app-bar"
       :default-os="os"
+      :default-arch="arch"
       :default-query="query"
       @update:query="query = $event"
-      @update:os="selectedOs = $event"
+      @update:platform="selectPlatform"
     />
     <v-row style="height: 100%">
       <v-col

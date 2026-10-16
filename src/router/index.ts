@@ -2,6 +2,8 @@ import {
   createRouter, RouteLocationNormalized,
 } from 'vue2-helpers/vue-router';
 
+import { defaultArch } from '@/lib/platforms';
+
 import Catalog from '@/views/Catalog.vue';
 import DataStore from '@/views/DataStore.vue';
 import ExtensionDetails from '@/views/ExtensionDetails.vue';
@@ -29,6 +31,13 @@ function legacyAppStoreQueryToExtensionDetailsProps(route: RouteLocationNormaliz
   };
 }
 
+function routeParamsWithDefaultArch(route: RouteLocationNormalized) {
+  return {
+    ...route.params,
+    arch: defaultArch(route.params.os, route.params.arch),
+  };
+}
+
 const router = createRouter({
   mode: 'history',
   routes: [
@@ -51,13 +60,13 @@ const router = createRouter({
       path: '/catalog/:category/:revision/:os/:arch?',
       name: 'Catalog',
       component: Catalog,
-      props: true,
+      props: routeParamsWithDefaultArch,
     },
     {
       path: '/view/:baseName/:revision/:os/:arch?',
       name: 'Extension Details',
       component: ExtensionDetails,
-      props: true,
+      props: routeParamsWithDefaultArch,
     },
     {
       path: '/midas3/slicerappstore',
