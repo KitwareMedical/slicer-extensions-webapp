@@ -9,6 +9,7 @@ export enum OS {
 export enum Arch {
   i386 = 'i386',
   amd64 = 'amd64',
+  arm64 = 'arm64',
 }
 
 export enum InstallState {

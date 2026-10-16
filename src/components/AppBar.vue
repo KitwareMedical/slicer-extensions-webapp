@@ -2,15 +2,8 @@
 import {
   defineComponent, PropType,
 } from '@vue/composition-api';
-import {
-  OS, hasExtensionManagerModel,
-} from '@/lib/api/extension.service';
-
-interface VueSelectItem {
-  text: string;
-  value: OS;
-  icon: string;
-}
+import { hasExtensionManagerModel } from '@/lib/api/extension.service';
+import { Platform, platforms, findPlatform } from '@/lib/platforms';
 
 export default defineComponent({
   name: 'AppBar',
@@ -19,6 +12,10 @@ export default defineComponent({
     defaultOs: {
       type: String as PropType<string>,
       required: true,
+    },
+    defaultArch: {
+      type: String as PropType<string>,
+      default: undefined,
     },
     defaultQuery: {
       type: String as PropType<string>,
@@ -39,37 +36,30 @@ export default defineComponent({
 
   data() {
     return {
-      os: this.defaultOs,
+      platform: findPlatform(this.defaultOs, this.defaultArch)?.key,
       query: this.defaultQuery,
     };
   },
 
   activated() {
-    this.os = this.defaultOs;
+    this.platform = findPlatform(this.defaultOs, this.defaultArch)?.key;
+  },
+
+  methods: {
+    onPlatformChange(key: string) {
+      const platform = platforms.find((p) => p.key === key);
+      if (platform) {
+        this.$emit('update:platform', { os: platform.os, arch: platform.arch });
+      }
+    },
   },
 
   computed: {
     hasExtensionManagerModel(): boolean {
       return hasExtensionManagerModel();
     },
-    operatingSystems(): VueSelectItem[] {
-      return [
-        {
-          text: 'Linux',
-          value: OS.linux,
-          icon: 'mdi-linux',
-        },
-        {
-          text: 'macOS',
-          value: OS.macosx,
-          icon: 'mdi-apple',
-        },
-        {
-          text: 'Windows',
-          value: OS.windows,
-          icon: 'mdi-microsoft-windows',
-        },
-      ];
+    operatingSystems(): Platform[] {
+      return platforms;
     },
   },
 });
@@ -97,12 +87,13 @@ export default defineComponent({
     <v-spacer></v-spacer>
     <v-select
       v-if="showOperatingSystemSelector"
-      v-model="os"
-      @change="$emit('update:os', $event);"
+      v-model="platform"
+      @change="onPlatformChange"
       class="shrink mx-4"
       hide-details
       solo
       :items="operatingSystems"
+      item-value="key"
     >
       <template v-slot:selection="data">
         <v-list-item-icon><v-icon>{{ data.item.icon }}</v-icon></v-list-item-icon>

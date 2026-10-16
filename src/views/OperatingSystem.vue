@@ -1,16 +1,11 @@
 <script lang="ts">
 import {
-  defineComponent, PropType, ref, onActivated, onMounted, computed,
+  defineComponent, PropType, ref, onActivated, onMounted,
 } from '@vue/composition-api';
-import { getLatestPackageRevision, OS } from '@/lib/api/extension.service';
+import { getLatestPackageRevision } from '@/lib/api/extension.service';
+import { Platform, platforms } from '@/lib/platforms';
 
 const AppId = process.env.VUE_APP_APP_ID as string;
-
-interface OperatingSystemToRevisionMapping {
-  linux: string | null;
-  macosx: string | null;
-  win: string | null;
-}
 
 export default defineComponent({
   name: 'OperatingSystemView',
@@ -23,39 +18,41 @@ export default defineComponent({
   },
 
   setup(props) {
-    const revisionByOperatingSystems = ref<OperatingSystemToRevisionMapping>({
-      linux: null,
-      macosx: null,
-      win: null,
-    });
+    const revisionByPlatform = ref<Record<string, string | null>>({});
 
-    const setRevisionByOperatingSystems = async () => {
-      revisionByOperatingSystems.value = {
-        linux: await getLatestPackageRevision({ appId: AppId, os: OS.linux, arch: undefined }),
-        macosx: await getLatestPackageRevision({ appId: AppId, os: OS.macosx, arch: undefined }),
-        win: await getLatestPackageRevision({ appId: AppId, os: OS.windows, arch: undefined }),
-      };
+    const setRevisionByPlatform = async () => {
+      const revisions = await Promise.all(platforms.map(
+        (p) => getLatestPackageRevision({ appId: AppId, os: p.os, arch: p.arch }),
+      ));
+      revisionByPlatform.value = Object.fromEntries(
+        platforms.map((p, i) => [p.key, revisions[i]]),
+      );
     };
 
     onMounted(() => {
-      setRevisionByOperatingSystems();
+      setRevisionByPlatform();
     });
     onActivated(() => {
-      setRevisionByOperatingSystems();
+      setRevisionByPlatform();
     });
 
+    const platformRoute = (platform: Platform) => {
+      const revision = revisionByPlatform.value[platform.key];
+      return revision
+        ? {
+          name: 'Catalog',
+          params: {
+            category: props.category, revision, os: platform.os, arch: platform.arch,
+          },
+        }
+        : undefined;
+    };
+
     return {
-      revisionByOperatingSystems,
-      setRevisionByOperatingSystems,
-      linuxRoute: computed(() => (revisionByOperatingSystems.value.linux
-        ? { name: 'Catalog', params: { category: props.category, revision: revisionByOperatingSystems.value.linux, os: 'linux' } }
-        : undefined)),
-      macosxRoute: computed(() => (revisionByOperatingSystems.value.macosx
-        ? { name: 'Catalog', params: { category: props.category, revision: revisionByOperatingSystems.value.macosx, os: 'macosx' } }
-        : undefined)),
-      winRoute: computed(() => (revisionByOperatingSystems.value.win
-        ? { name: 'Catalog', params: { category: props.category, revision: revisionByOperatingSystems.value.win, os: 'win' } }
-        : undefined)),
+      platforms,
+      revisionByPlatform,
+      setRevisionByPlatform,
+      platformRoute,
     };
   },
 });
@@ -66,48 +63,19 @@ export default defineComponent({
     fluid
   >
     <v-row>
-      <v-col>
+      <v-col
+        v-for="platform in platforms"
+        :key="platform.key"
+      >
         <div class="text-center">
           <v-btn
             class="ma-2"
-            :loading="revisionByOperatingSystems.linux == undefined"
-            :disabled="revisionByOperatingSystems.linux == undefined"
+            :loading="revisionByPlatform[platform.key] == undefined"
+            :disabled="revisionByPlatform[platform.key] == undefined"
             color="success"
-            :to="linuxRoute"
+            :to="platformRoute(platform)"
           >
-            Linux
-            <template v-slot:loader>
-              <span>Loading...</span>
-            </template>
-          </v-btn>
-        </div>
-      </v-col>
-      <v-col>
-        <div class="text-center">
-          <v-btn
-            class="ma-2"
-            :loading="revisionByOperatingSystems.macosx == undefined"
-            :disabled="revisionByOperatingSystems.macosx == undefined"
-            color="success"
-            :to="macosxRoute"
-          >
-            macOS
-            <template v-slot:loader>
-              <span>Loading...</span>
-            </template>
-          </v-btn>
-        </div>
-      </v-col>
-      <v-col>
-        <div class="text-center">
-          <v-btn
-            class="ma-2"
-            :loading="revisionByOperatingSystems.win == undefined"
-            :disabled="revisionByOperatingSystems.win == undefined"
-            color="success"
-            :to="winRoute"
-          >
-            Windows
+            {{ platform.text }}
             <template v-slot:loader>
               <span>Loading...</span>
             </template>
