@@ -34,7 +34,7 @@ export default defineComponent({
         });
         return;
       }
-      const location = { name: 'Catalog', params: { category }, query: { q: query.q } };
+      const location = { name: 'Catalog', params: { category, arch: route.params.arch }, query: { q: query.q } };
       router.push(location).catch((error: Error) => {
         if (error.name !== 'NavigationDuplicated') {
           throw error;
