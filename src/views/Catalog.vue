@@ -84,7 +84,7 @@ export default defineComponent({
           });
           return;
         }
-        router.replace({ name: 'Catalog', query: { q } }).catch((error: Error) => {
+        router.replace({ name: 'Catalog', params: { arch: route.params.arch }, query: { q } }).catch((error: Error) => {
           if (error.name !== 'NavigationDuplicated') {
             throw error;
           }
